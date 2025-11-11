@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Home - Colts{% endblock %}
+{% block content %}
+<div class="p-5 bg-image"
+     style="
+     background-image: url('/static/hero.png');
+     background-size: cover;
+     background-position: center;
+     height: 650px;"
+     id="hero">
+  <div class="text-left mb-5" style="color: white; width: 180px; margin-left: 50px;">
+    <h1 class="display-4 fw-bold">THE HEART OF RUGBY IN DEVON </h1>
+      <a href="/about"><button type="button" class="btn btn-primary btn-lg">ABOUT US</button></a>
+  </div>
+</div>
+
+<div class="container" id="fixtures-results-cards">
+  <div class="row my-5">
+    <div class="col-md-6 mb-4">
+      <div class="card text-center">
+        <div class="card-header bg-primary text-white">
+          Upcoming Fixture
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Devon Colts vs Cornwall Colts</h5>
+          <p class="card-text">Date: 15th December 2025<br>Time: 3:00 PM<br>Venue: Exeter Rugby Ground</p>
+          <a href="#" class="btn btn-primary">View Details</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card text-center">
+        <div class="card-header bg-success text-white">
+          Recent Result
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Devon Colts 28 - 14 Somerset Colts</h5>
+          <p class="card-text">Date: 1st July 2024<br>Venue: Taunton Rugby Ground</p>
+          <a href="#" class="btn btn-success">View Match Report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container" id="news-cards-hardcoded-data">
+  <h2 class="mb-4">Latest News</h2>
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+          <img src="/static/news1.jpg" class="card-img-top"
+     onerror="this.onerror=null; this.src='/static/default.png';"
+     alt="fallback image">
+
+        <div class="card-body">
+          <h5 class="card-title">Devon Colts Secure Victory in Thrilling Match</h5>
+          <p class="card-text">In an exhilarating game last weekend, the Devon Colts triumphed over their rivals...</p>
+            <p>09 / 10 / 2025</p>
+          <a href="#" class="btn btn-primary">Read More</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        <img src="/static/news2.jpg" class="card-img-top"
+     onerror="this.onerror=null; this.src='/static/default.png';"
+     alt="fallback image">
+        <div class="card-body">
+          <h5 class="card-title">Upcoming Training Sessions Announced</h5>
+          <p class="card-text">The coaching staff has released the schedule for the upcoming training sessions...</p>
+            <p>09 / 09 / 2025</p>
+          <a href="#" class="btn btn-primary">Read More</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        <img src="/static/news3.jpg" class="card-img-top"
+     onerror="this.onerror=null; this.src='/static/default.png';"
+     alt="fallback image">
+        <div class="card-body">
+          <h5 class="card-title">Player Spotlight: Rising Star John Doe</h5>
+          <p class="card-text">John Doe has been making waves this season with his outstanding performances...</p>
+            <p>08 / 09 / 2025</p>
+          <a href="#" class="btn btn-primary">Read More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="spacer"></div>
+
+<div class="container" id="sponsors-section">
+  <h2 class="mb-4 text-center">Our Sponsors</h2>
+  <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
+    <img src="/static/sponsor1.png" alt="Sponsor 1" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+    <img src="/static/sponsor2.png" alt="Sponsor 2" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+    <img src="/static/sponsor3.png" alt="Sponsor 3" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+    <img src="/static/sponsor4.png" alt="Sponsor 4" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="container" id="about-section">
+  <h2 class="mb-4 text-center">About Devon RFU Colts</h2>
+  <p class="text-center">Devon RFU Colts is dedicated to nurturing young rugby talent in the Devon area. Our mission is to provide a supportive environment where players can develop their skills, sportsmanship, and love for the game. We are committed to fostering a strong community spirit and promoting the values of rugby both on and off the field.</p>
+</div>
+{% endblock %}
