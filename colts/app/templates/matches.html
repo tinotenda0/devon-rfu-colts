@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Matches - Colts{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-center">Match Fixtures and Results</h2>
+    <div class="list-group">
+        {% for match in matches %}
+        <div class="list-group item mb-3">
+            <h5 class="mb-2">{{ match.date }} - {{ match.team_home }} vs {{ match.team_away }}</h5>
+            <p>Venue: {{ match.venue }} | Time: {{ match.time }}</p>
+            {% if match.result %}
+            <p><strong>Result:</strong> {{ match.result }}</p>
+            {% else %}
+            <p><em>Fixture yet to be played</em></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
