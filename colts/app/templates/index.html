@@ -2,63 +2,185 @@
 {% block title %}Home - Colts{% endblock %}
 {% block content %}
 
-<div class="p-5 bg-image"
-     style="
-     background-image: url('/static/hero1.png');
-     background-size: cover;
-     background-position: center;
-     height: 650px;"
-     id="hero">
-  <div class="text-left mb-5" style="color: white; width: 180px; margin-left: 50px;">
-    <h1 class="display-4 fw-bold">THE HEART OF RUGBY IN DEVON </h1>
-      <a href="/about"><button type="button" class="btn btn-primary btn-lg">ABOUT US</button></a>
+
+<div class="top-bar py-1">
+  <div class="container d-flex justify-content-between align-items-center small">
+    <div>colts@devonrfu.co.uk</div>
+    <div class="text-end">+44 234 567 890</div>
   </div>
 </div>
-    
-<div class="container my-4">
-  <div class="row">
-    <div class="col-md-6">
-      <h3 class="text-center font-weight-bold">RECENT MATCHES</h3>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <span class="badge badge-secondary">🥈</span> Team 03 - 14 Team
-        </li>
 
-      </ul>
-    </div>
 
-    <div class="col-md-6">
-      <h3 class="text-center font-weight-bold">FIXTURE</h3>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <span class="badge badge-secondary">🥈</span> Team vs Team
-        </li>
+<nav class="navbar navbar-expand-lg navbar-dark main-nav py-3">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <img src="{% static 'logo.png' %}" alt="logo" class="brand-mark">
+      <span class="fw-bold">COLTS</span>
+    </a>
 
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-center gap-3">
+        <li class="nav-item"><a class="nav-link" href="#about-section">ABOUT US</a></li>
+        <li class="nav-item"><a class="nav-link" href="#fixtures">FIXTURES</a></li>
+        <li class="nav-item"><a class="nav-link" href="#table">TABLE</a></li>
+        <li class="nav-item"><a class="nav-link" href="#results">RESULTS</a></li>
       </ul>
     </div>
   </div>
-</div>
+</nav>
 
-    <div class="spacer"></div>
-
-<div class="container" id="sponsors-section">
-  <h2 class="mb-4 text-center">Our Sponsors</h2>
-  <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
-    <img src="/static/sponsor1.png" alt="Sponsor 1" height="80"
-     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
-    <img src="/static/sponsor2.png" alt="Sponsor 2" height="80"
-     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
-    <img src="/static/sponsor3.png" alt="Sponsor 3" height="80"
-     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
-    <img src="/static/sponsor4.png" alt="Sponsor 4" height="80"
-     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+<header class="hero" style="background-image:url('{% static 'hero1.png' %}');">
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-left">
+      <h1 class="hero-title text-white">WE ARE<br>THE<br>COLTS</h1>
+      <a href="#about-section" class="btn btn-dark mt-3 px-4 py-2 fw-bold">ABOUT US</a>
+    </div>
   </div>
-</div>
+</header>
 
-<div class="spacer"></div>
 
-<div class="container" id="about-section">
-  <h2 class="mb-4 text-center">About Devon RFU Colts</h2>
-  <p class="text-center">Devon RFU Colts is dedicated to nurturing young rugby talent in the Devon area. Our mission is to provide a supportive environment where players can develop their skills, sportsmanship, and love for the game. We are committed to fostering a strong community spirit and promoting the values of rugby both on and off the field.</p>
-</div>
+<section class="matches-fixture container-fluid">
+  <div class="row g-0">
+
+    <div class="col-lg-6 side-left p-5">
+      <div class="container">
+        <h3 class="fw-bold text-center text-uppercase mb-4">Recent Matches</h3>
+        <div class="row gy-3">
+          <div class="col-12">
+            <div class="card-match">
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <div>TEAM 03 - 14 TEAM</div>
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card-match">
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <div>TEAM 76 - 44 TEAM</div>
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card-match">
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <div>TEAM 67 - 17 TEAM</div>
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card-match">
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <div>TEAM 07 - 12 TEAM</div>
+              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-6 side-right p-5" id="fixtures">
+      <div class="container">
+        <h3 class="fw-bold text-center text-uppercase mb-4" style="color:var(--colts-green)">FIXTURE</h3>
+        <div class="row gy-3 fixture-list">
+          {% for i in "1234" %}
+          <div class="col-12">
+            <div class="card-fixture d-flex justify-content-between align-items-center px-3">
+              <img src="{% static 'shield.png' %}" alt="shield" width="26" height="26">
+              <div class="text-center w-100">TEAM <span class="text-success">VS</span> TEAM</div>
+              <img src="{% static 'shield.png' %}" alt="shield" width="26" height="26">
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sponsors-strip text-center">
+  <div class="container">
+    <h4 class="fw-bold mb-3">OUR SPONSORS</h4>
+
+    <div class="d-flex justify-content-center align-items-center flex-wrap mb-3">
+      {% for img in "sponsor1 sponsor2 sponsor3 sponsor4".split %}
+      <img src="{% static img|add:'.png' %}" alt="{{img}}" class="mx-3 my-2" style="max-height:54px;">
+      {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center flex-wrap">
+      {% for img in "sponsor5 sponsor6 sponsor7 sponsor8".split %}
+      <img src="{% static img|add:'.png' %}" alt="{{img}}" class="mx-3 my-2" style="max-height:54px;">
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<section id="about-section" class="about-section">
+  <div class="container">
+    <h3 class="text-center fw-bold text-uppercase mb-4">About Us</h3>
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-4">
+        <div class="about-card">
+          <img src="{% static 'about-image.jpg' %}" alt="team" class="img-fluid rounded">
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="about-card p-4">
+          <p class="muted-small">
+            By all means, the conventional notion of the condition of the participant evaluation sample reinforces the argument for The Financing of Original Enhancement...
+          </p>
+          <p class="muted-small">
+            To be more specific, with the exception of the task analysis is slowly considerable. However, the analysis of the network development should set clear rules regarding the proper theory of the coherent software.
+          </p>
+          <p class="muted-small">
+            It's a well-known fact that the utilization of the content strategy is primarily considerable. However, the design of the technical terms minimizes influence of the minor details of matters of peculiar interest...
+          </p>
+          <p class="muted-small">
+            (Replace with your full about text — this container is wide so long paragraphs fit and feel like the wireframe.)
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container">
+    <div class="row gy-4">
+      <div class="col-md-4">
+        <h5 class="fw-bold">Contact Us</h5>
+        <p class="muted-small">Email: <a href="mailto:colts@devonrfu.co.uk">colts@devonrfu.co.uk</a><br>Phone: +44 1234 567 890</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <h5 class="fw-bold">Sponsors</h5>
+        <div class="d-flex justify-content-center align-items-center flex-column mt-2">
+          <img src="{% static 'sponsor1.png' %}" alt="s1" style="max-height:48px" class="mb-2">
+          <img src="{% static 'sponsor2.png' %}" alt="s2" style="max-height:34px">
+        </div>
+      </div>
+      <div class="col-md-4 text-end">
+        <h5 class="fw-bold">Follow Us</h5>
+        <div class="d-flex justify-content-end gap-3 mt-2">
+          <a href="#"><img src="{% static 'icon-fb.png' %}" alt="fb" width="36"></a>
+          <a href="#"><img src="{% static 'icon-ig.png' %}" alt="ig" width="36"></a>
+          <a href="#"><img src="{% static 'icon-x.png' %}" alt="x" width="36"></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4 muted-small">© <span id="year"></span> The Colts</div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 {% endblock %}

@@ -98,3 +98,76 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
+:root{
+  --colts-green: #0ea64a;
+  --dark-bg: #0b0b0b;
+}
+
+
+.top-bar { background: var(--colts-green); color:#071; font-weight:600; font-size:.95rem; }
+.top-bar a { color: #052b12; text-decoration: none; }
+
+.main-nav { background: transparent; }
+.brand-mark { width:44px; height:44px; object-fit:contain; }
+
+
+.hero {
+  min-height: 88vh;
+  display:flex;
+  align-items:center;
+  color: white;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.hero-overlay{ background: rgba(0,0,0,0.15); position:absolute; inset:0; }
+.hero-left { z-index:2; max-width:640px; padding-left:3rem; }
+.hero-title { font-weight:900; letter-spacing:1px; line-height:0.9; font-size:6.25rem; }
+@media (max-width:900px){ .hero-title{ font-size:3.2rem; } .hero-left{ padding:1.5rem; } }
+
+
+.matches-fixture { margin-top:-1.5rem; }
+.side-left { background: var(--colts-green); color:#003; }
+.side-right{ background: var(--dark-bg); color:#fff; }
+
+.card-match {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.8rem;
+  height:64px;
+  border-radius:12px;
+  background:#fff;
+  font-weight:800;
+  color:var(--colts-green);
+  box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+}
+.card-fixture {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.8rem;
+  height:64px;
+  border-radius:12px;
+  background:#fff;
+  font-weight:800;
+  color:var(--colts-green);
+  box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+}
+.fixture-list .card-fixture { color:#0b0b0b; }
+
+
+.sponsors-strip { background:#fff; padding:2rem 0; }
+.sponsors-strip img { max-height:54px; margin:0 14px; object-fit:contain; }
+
+
+.about-section { background: var(--colts-green); color:#002b12; padding:3.5rem 0; }
+.about-card { background: rgba(255,255,255,0.12); border-radius:16px; padding:1rem; }
+
+
+footer { background: #111; color:#eee; padding:3rem 0; }
+footer a { color:#eee; text-decoration:none; }
+
+
+.muted-small{ font-size:.82rem; opacity:.85; }
+
