@@ -1,47 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Home - Colts{% endblock %}
 {% block content %}
 
 
-<div class="top-bar py-1">
-  <div class="container d-flex justify-content-between align-items-center small">
-    <div>colts@devonrfu.co.uk</div>
-    <div class="text-end">+44 234 567 890</div>
-  </div>
-</div>
-
-
-<nav class="navbar navbar-expand-lg navbar-dark main-nav py-3">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-      <img src="{% static 'logo.png' %}" alt="logo" class="brand-mark">
-      <span class="fw-bold">COLTS</span>
-    </a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav ms-auto align-items-center gap-3">
-        <li class="nav-item"><a class="nav-link" href="#about-section">ABOUT US</a></li>
-        <li class="nav-item"><a class="nav-link" href="#fixtures">FIXTURES</a></li>
-        <li class="nav-item"><a class="nav-link" href="#table">TABLE</a></li>
-        <li class="nav-item"><a class="nav-link" href="#results">RESULTS</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<header class="hero" style="background-image:url('{% static 'hero1.png' %}');">
-  <div class="hero-overlay"></div>
-  <div class="container">
-    <div class="hero-left">
-      <h1 class="hero-title text-white">WE ARE<br>THE<br>COLTS</h1>
-      <a href="#about-section" class="btn btn-dark mt-3 px-4 py-2 fw-bold">ABOUT US</a>
-    </div>
-  </div>
-</header>
 
 
 <section class="matches-fixture container-fluid">
@@ -51,49 +13,48 @@
       <div class="container">
         <h3 class="fw-bold text-center text-uppercase mb-4">Recent Matches</h3>
         <div class="row gy-3">
-          <div class="col-12">
+          <div class="col-12 center-items">
             <div class="card-match">
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
               <div>TEAM 03 - 14 TEAM</div>
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12 center-items">
             <div class="card-match">
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
               <div>TEAM 76 - 44 TEAM</div>
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12 center-items">
             <div class="card-match">
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
               <div>TEAM 67 - 17 TEAM</div>
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12 center-items">
             <div class="card-match">
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
               <div>TEAM 07 - 12 TEAM</div>
-              <img src="{% static 'shield.png' %}" alt="shield" width="28" height="28">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
             </div>
           </div>
         </div>
       </div>
     </div>
 
-
     <div class="col-lg-6 side-right p-5" id="fixtures">
       <div class="container">
-        <h3 class="fw-bold text-center text-uppercase mb-4" style="color:var(--colts-green)">FIXTURE</h3>
+        <h3 class="fw-bold text-center text-uppercase mb-4" style="color:var(--colts-green)">FIXTURES</h3>
         <div class="row gy-3 fixture-list">
           {% for i in "1234" %}
-          <div class="col-12">
-            <div class="card-fixture d-flex justify-content-between align-items-center px-3">
-              <img src="{% static 'shield.png' %}" alt="shield" width="26" height="26">
-              <div class="text-center w-100">TEAM <span class="text-success">VS</span> TEAM</div>
-              <img src="{% static 'shield.png' %}" alt="shield" width="26" height="26">
+          <div class="col-12 center-items">
+            <div class="card-fixture d-flex justify-content-center align-items-center px-3">
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
+              <div>TEAM VS TEAM</div>
+              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
             </div>
           </div>
           {% endfor %}
@@ -103,84 +64,61 @@
   </div>
 </section>
 
-
 <section class="sponsors-strip text-center">
   <div class="container">
     <h4 class="fw-bold mb-3">OUR SPONSORS</h4>
 
-    <div class="d-flex justify-content-center align-items-center flex-wrap mb-3">
-      {% for img in "sponsor1 sponsor2 sponsor3 sponsor4".split %}
-      <img src="{% static img|add:'.png' %}" alt="{{img}}" class="mx-3 my-2" style="max-height:54px;">
-      {% endfor %}
+<div id="sponsorCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+  <div class="carousel-inner d-flex align-items-center">
+    <div class="carousel-item active">
+      <img src="/static/sponsor1.png" class="d-inline-block" height="60" alt="Logo 1">
+      <img src="/static/sponsor2.png" class="d-inline-block" height="60" alt="Logo 2">
+      <img src="/static/sponsor3.png" class="d-inline-block" height="60" alt="Logo 3">
+      <img src="/static/sponsor4.png" class="d-inline-block" height="60" alt="Logo 3">
     </div>
-
-    <div class="d-flex justify-content-center align-items-center flex-wrap">
-      {% for img in "sponsor5 sponsor6 sponsor7 sponsor8".split %}
-      <img src="{% static img|add:'.png' %}" alt="{{img}}" class="mx-3 my-2" style="max-height:54px;">
-      {% endfor %}
+    <div class="carousel-item">
+      <img src="/static/sponsor1.png" class="d-inline-block" height="60" alt="Logo 1">
+      <img src="/static/sponsor2.png" class="d-inline-block" height="60" alt="Logo 2">
+      <img src="/static/sponsor3.png" class="d-inline-block" height="60" alt="Logo 3">
+      <img src="/static/sponsor4.png" class="d-inline-block" height="60" alt="Logo 3">
     </div>
   </div>
-</section>
+</div>
 
+
+  </div>
+</section>
 
 <section id="about-section" class="about-section">
-  <div class="container">
     <h3 class="text-center fw-bold text-uppercase mb-4">About Us</h3>
-    <div class="row g-4 align-items-start">
-      <div class="col-lg-4">
+      <div class="container d-flex align-items-center">
         <div class="about-card">
-          <img src="{% static 'about-image.jpg' %}" alt="team" class="img-fluid rounded">
-        </div>
+          <div class="align-items-center">
+            <img src="{% static 'logo.svg' %}" alt="devon-rfu-logo" class="align-items-center">
+          </div>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta, cupiditate deserunt a velit, voluptatum veniam
+          laudantium error neque beatae, laborum maiores sunt quae id ipsa aliquam vero ducimus! Consequatur et ab obcaecati
+          nemo nesciunt aperiam rerum, nisi iste ipsum placeat repellat sunt laudantium aut minus ex officiis possimus nam,
+          harum dicta maxime libero! Deserunt hic quisquam reprehenderit animi totam, quas quaerat incidunt eius quasi nulla
+          dolorum sint voluptate illo? Sequi cupiditate modi obcaecati? Natus, cumque. <br>Totam, doloribus omnis possimus
+          consequatur iste tempore fugit eos expedita quisquam rem praesentium velit, quae deserunt blanditiis perspiciatis in
+          architecto quo magni qui. Aut est quis animi, provident quaerat dolores nostrum omnis voluptates doloribus minima
+          exercitationem cum nisi quam dignissimos quibusdam earum at repellendus alias vitae debitis ipsum? Obcaecati
+          laboriosam molestiae eius rerum quo consectetur alias debitis a impedit nostrum, sequi sunt inventore repudiandae
+          magnam fugit libero maiores vero unde porro labore reprehenderit? <br> Quod culpa deserunt voluptas qui commodi laborum
+          eveniet sint sunt. Voluptate doloremque voluptates at ullam. Ipsa consectetur corrupti possimus nam, vitae quod libero
+          eaque itaque repudiandae illo culpa optio cum molestias ab, temporibus architecto, repellendus omnis! Sint quia ipsa
+          quod vero, quae quaerat natus saepe, accusamus ipsum praesentium iusto assumenda? Voluptate quos quod aspernatur,
+          cupiditate beatae aliquam ullam? Labore placeat tempore non! Debitis numquam, exercitationem ipsa iure quae error qui
+          necessitatibus quaerat perspiciatis delectus doloremque, minima sunt fuga eveniet vero laudantium distinctio
+          voluptatem pariatur tempora? Accusantium, est explicabo. <br> Corrupti fugiat est at ducimus ipsum, quo beatae sit nemo
+          voluptatum, autem dicta aliquam a id nobis. Quidem itaque mollitia esse possimus officia quam impedit, quibusdam
+          aliquid? Incidunt modi tenetur numquam excepturi mollitia ab odio perferendis ut qui ex sit consequuntur deleniti
+          neque, reprehenderit cum eos, ad sunt culpa ducimus voluptate molestiae accusamus. Est numquam modi architecto, odio a
+          quam magnam delectus laudantium natus.</p>
       </div>
-      <div class="col-lg-8">
-        <div class="about-card p-4">
-          <p class="muted-small">
-            By all means, the conventional notion of the condition of the participant evaluation sample reinforces the argument for The Financing of Original Enhancement...
-          </p>
-          <p class="muted-small">
-            To be more specific, with the exception of the task analysis is slowly considerable. However, the analysis of the network development should set clear rules regarding the proper theory of the coherent software.
-          </p>
-          <p class="muted-small">
-            It's a well-known fact that the utilization of the content strategy is primarily considerable. However, the design of the technical terms minimizes influence of the minor details of matters of peculiar interest...
-          </p>
-          <p class="muted-small">
-            (Replace with your full about text — this container is wide so long paragraphs fit and feel like the wireframe.)
-          </p>
-        </div>
-      </div>
-    </div>
+      <!-- <div class="col-lg-8">
+        <div class="about-card p-4"> -->
   </div>
 </section>
-
-
-<footer>
-  <div class="container">
-    <div class="row gy-4">
-      <div class="col-md-4">
-        <h5 class="fw-bold">Contact Us</h5>
-        <p class="muted-small">Email: <a href="mailto:colts@devonrfu.co.uk">colts@devonrfu.co.uk</a><br>Phone: +44 1234 567 890</p>
-      </div>
-      <div class="col-md-4 text-center">
-        <h5 class="fw-bold">Sponsors</h5>
-        <div class="d-flex justify-content-center align-items-center flex-column mt-2">
-          <img src="{% static 'sponsor1.png' %}" alt="s1" style="max-height:48px" class="mb-2">
-          <img src="{% static 'sponsor2.png' %}" alt="s2" style="max-height:34px">
-        </div>
-      </div>
-      <div class="col-md-4 text-end">
-        <h5 class="fw-bold">Follow Us</h5>
-        <div class="d-flex justify-content-end gap-3 mt-2">
-          <a href="#"><img src="{% static 'icon-fb.png' %}" alt="fb" width="36"></a>
-          <a href="#"><img src="{% static 'icon-ig.png' %}" alt="ig" width="36"></a>
-          <a href="#"><img src="{% static 'icon-x.png' %}" alt="x" width="36"></a>
-        </div>
-      </div>
-    </div>
-    <div class="text-center mt-4 muted-small">© <span id="year"></span> The Colts</div>
-  </div>
-</footer>
-
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
-</script>
 {% endblock %}
