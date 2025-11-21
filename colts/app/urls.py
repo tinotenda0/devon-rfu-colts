@@ -8,4 +8,6 @@ urlpatterns = [
     path('matches', views.matches, name='matches'),
 
     path('about', views.about, name='about'),
+
+    path('auth', views.auth, name='auth')
 ]
