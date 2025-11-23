@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Club Admin Dashboard</title>
+</head>
+<body>
+    <h1>Club Admin Dashboard - {{ club.name }}</h1>
+    
+    <nav>
+        <a href="{% url 'profile' %}">Profile</a> | 
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+
+    <section>
+        <h2>My Club: {{ club.name }}</h2>
+        <p>{{ club.team_bio }}</p>
+        <a href="{% url 'club_team_edit' %}">Edit Club Info</a>
+    </section>
+
+    <section>
+        <h3>Players</h3>
+        <a href="{% url 'player_add' %}">Add New Player</a>
+        <ul>
+            {% for player in players %}
+                <li>{{ player.name }} - {{ player.position }} (Age: {{ player.age }})
+                    <a href="{% url 'player_edit' player.id %}">Edit</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section>
+        <h3>Upcoming Matches</h3>
+        <ul>
+            {% for match in matches %}
+                <li>{{ match.date }} - {{ match.home_team }} vs {{ match.away_team }} @ {{ match.venue }}
+                    {% if match.result %}
+                        (Result: {{ match.result.home_score }}-{{ match.result.away_score }})
+                    {% else %}
+                        <a href="{% url 'result_add' match.id %}">Add Result</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section>
+        <h3>League Tables</h3>
+        <a href="{% url 'table_list' %}">View League Tables</a>
+    </section>
+</body>
+</html>

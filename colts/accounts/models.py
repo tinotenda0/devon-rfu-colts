@@ -5,10 +5,19 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    ROLE_CHOICES = (
+    ROLE_CHOICES = [
         ("admin", "Admin"),
-        ("official", "Official"),
-        ("coach", "Coach"),
-        ("parent", "Parent"),
-    )
+        ("club_admin", "Club Admin"),
+        # ('fan', 'Fan'),
+    ]
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+
+    club = models.ForeignKey(
+        "app.Team", null=True, blank=True, on_delete=models.SET_NULL
+    )
+
+    def is_admin(self):
+        return self.role == "admin"
+
+    def is_club_admin(self):
+        return self.role == "club_admin"
