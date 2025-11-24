@@ -1,19 +1,6 @@
 from django.db import models
-from enum import Enum
-from django.contrib.auth.models import AbstractUser
-
-# Match status differentiator
-
-
-class MatchStatus(Enum):
-    UPCOMING = "Upcoming"
-    COMPLETED = "Completed"
-    CANCELLED = "Cancelled"
-    POSTPONED = "Postponed"
-
 
 # Create your models here.
-
 
 class Season(models.Model):
     year = models.CharField(max_length=20)
@@ -74,7 +61,7 @@ class Result(models.Model):
     away_tries = models.IntegerField()
     notes = models.TextField(max_length=1000, blank=True)
 
-class Table(models.Model):
+class Standings(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE)
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)

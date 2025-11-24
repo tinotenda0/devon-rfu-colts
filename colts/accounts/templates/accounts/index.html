@@ -1,26 +1,93 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Devon RFU Colts – Home</title>
-  </head>
-  <body>
-    <h1>Welcome to the Devon RFU Colts Hub</h1>
+{% extends 'accounts/base.html' %}
+{% block hero %}
 
-    <nav>
-      <ul>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'profile' %}">Profile</a></li>
-        <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
-        <li><a href="{% url 'password_change' %}">Change Password</a></li>
-        {% if user.role == 'admin' or user.role == 'official' %}
-        <li><a href="{% url 'admin_panel' %}">Admin Panel</a></li>
-        {% endif %}
-        <li><a href="{% url 'logout' %}">Logout</a></li>
-        {% else %}
-        <li><a href="{% url 'login' %}">Login</a></li>
-        <li><a href="{% url 'register' %}">Register</a></li>
-        {% endif %}
-      </ul>
-    </nav>
-  </body>
-</html>
+    <div class="container-fluid">
+
+    <h1 class="text-left mb-2">Welcome Back, {{ user.username }}</h1>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Seasons</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ seasons|length }} Seasons</h5>
+                        <a href="#" class="btn btn-light">New Season</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Leagues</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ leagues|length }} Leagues</h5>
+                        <a href="#" class="btn btn-light">New League</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Teams</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ teams|length }} Teams</h5>
+                        <a href="#" class="btn btn-light">Add Team</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="match-summary" class="container-fluid p-3">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Recent Matches</div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for match in matches %}
+                                <li class="list-group-item">
+                                    {{ match.home_team.name }} vs {{ match.away_team.name }} - {{ match.date }}
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item">No recent matches.</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="#" class="btn btn-primary mt-3">View All Matches</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Club Admins</div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for admin in club_admins %}
+                                <li class="list-group-item">{{ admin.username }} - {{ admin.email }}</li>
+                            {% empty %}
+                                <li class="list-group-item">No club admins found.</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'add_new' %}" class="btn btn-primary mt-3">Add New Club Admin</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+{# Admin Full Profile View and Edit #}
+    <div id="admin-profile" class="container-fluid">
+        <div class="card">
+            <div class="card-header">My Account</div>
+            <div class="card-body">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Role:</strong> {{ user.role }}</p>
+                <a href="#" class="btn btn-primary">Edit Profile</a>
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

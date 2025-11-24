@@ -1,52 +1,148 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Club Admin Dashboard</title>
-</head>
-<body>
-    <h1>Club Admin Dashboard - {{ club.name }}</h1>
-    
-    <nav>
-        <a href="{% url 'profile' %}">Profile</a> | 
-        <a href="{% url 'logout' %}">Logout</a>
-    </nav>
+{% extends 'accounts/base.html' %}
+{% block hero %}
+    <div class="container-fluid">
+        <h1 class="text-left mb-2">Welcome Back, {{ user.username }}</h1>
+        <h2 class="text-left mb-4">Club: {{ club.name }}</h2>
 
-    <section>
-        <h2>My Club: {{ club.name }}</h2>
-        <p>{{ club.team_bio }}</p>
-        <a href="{% url 'club_team_edit' %}">Edit Club Info</a>
-    </section>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Your Players</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ players|length }} Players</h5>
+                        <a href="#" class="btn btn-light">View Players</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Your Team</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ club.name }}</h5>
+                        <a href="#" class="btn btn-light">Manage Team</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <section>
-        <h3>Players</h3>
-        <a href="{% url 'player_add' %}">Add New Player</a>
-        <ul>
-            {% for player in players %}
-                <li>{{ player.name }} - {{ player.position }} (Age: {{ player.age }})
-                    <a href="{% url 'player_edit' player.id %}">Edit</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </section>
+    <div id="match-summary" class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                    <div class="card-header">Recent Matches for {{ club.name }}</div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for match in matches %}
+                                <li class="list-group-item">
+                                    {{ match.home_team.name }} vs {{ match.away_team.name }} - {{ match.date }}
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item">No recent matches for your club.</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="#" class="btn btn-primary mt-3">View All Club Matches</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-    <section>
-        <h3>Upcoming Matches</h3>
-        <ul>
-            {% for match in matches %}
-                <li>{{ match.date }} - {{ match.home_team }} vs {{ match.away_team }} @ {{ match.venue }}
-                    {% if match.result %}
-                        (Result: {{ match.result.home_score }}-{{ match.result.away_score }})
-                    {% else %}
-                        <a href="{% url 'result_add' match.id %}">Add Result</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    </section>
+{% block content %}
+    <div id="club-league-table" class="container-fluid">
+        <div class="card">
+            <div class="card-header">League Table for {{ club.name }}</div>
+            <div class="card-body">
+                {% if club_league_table %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th>Played</th>
+                                <th>Wins</th>
+                                <th>Draws</th>
+                                <th>Losses</th>
+                                <th>Points For</th>
+                                <th>Points Against</th>
+                                <th>Point Diff</th>
+                                <th>Tries For</th>
+                                <th>Tries Against</th>
+                                <th>Bonus Points</th>
+                                <th>Total Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in club_league_table %}
+                                <tr {% if row.team == club %}class="table-primary"{% endif %}>
+                                    <td>{{ row.team.name }}</td>
+                                    <td>{{ row.played }}</td>
+                                    <td>{{ row.wins }}</td>
+                                    <td>{{ row.draws }}</td>
+                                    <td>{{ row.losses }}</td>
+                                    <td>{{ row.points_for }}</td>
+                                    <td>{{ row.points_against }}</td>
+                                    <td>{{ row.point_difference }}</td>
+                                    <td>{{ row.tries_for }}</td>
+                                    <td>{{ row.tries_against }}</td>
+                                    <td>{{ row.bonus_points }}</td>
+                                    <td>{{ row.total_points }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No league table data available for your club.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-    <section>
-        <h3>League Tables</h3>
-        <a href="{% url 'table_list' %}">View League Tables</a>
-    </section>
-</body>
-</html>
+    <div id="all-players" class="container-fluid">
+    <div class="card mt-4">
+            <div class="card-header">All Players in {{ club.name }}</div>
+            <div class="card-body">
+                <div class="row">
+                    {% for player in players %}
+                        <div class="col-md-3 mb-3">
+                            <div class="card player-card h-100">
+                                {% if player.image %}
+                                    <img src="{{ player.image.url }}" class="card-img-top" alt="{{ player.name }}">
+                                {% else %}
+                                    <img src="/static/default_player.png" class="card-img-top" alt="Default Player Image">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ player.name }}</h5>
+                                    <p class="card-text">{{ player.position }}</p>
+                                    <a href="#" class="btn btn-sm btn-primary">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <p>No players found for your club.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <a href="#" class="btn btn-success mt-3">Add New Player</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {# My account section for the club admin #}
+    <div id="club-admin-account" class="container-fluid">
+        <div class="card">
+            <div class="card-header">My Account</div>
+            <div class="card-body">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Role:</strong> {{ user.role }}</p>
+                <a href="#" class="btn btn-primary">Edit Profile</a>
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

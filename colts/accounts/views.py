@@ -6,14 +6,38 @@ from accounts.decorators import admin_required, club_admin_required
 from app.models import Season, League, Team, Match, Result, Player
 from accounts.models import CustomUser
 
+def teams(request):
+    try:
+        teams = Team.objects.all()
+    except Exception as e:
+        print(f"Error fetching teams: {e}")
+        teams = []
+    return teams
+
+def users(request):
+    try:
+        users = CustomUser.objects.all()
+    except Exception as e:
+        print(f"Error fetching users: {e}")
+        users = []
+    return users
 
 def index(request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser or request.user.role == "admin":
-            return redirect("admin_dashboard")
-        elif request.user.role == "club_admin":
-            return redirect("club_admin_dash")
-    return render(request, "index.html")
+    club_admins = CustomUser.objects.filter(role="club_admin")
+    context = {
+        "seasons": Season.objects.all().order_by("-start_date"),
+        "leagues": League.objects.all(),
+        "teams": Team.objects.all(),
+        "club_admins": club_admins,
+        "matches": Match.objects.all().order_by("-date")[:10],
+    }
+
+    # if request.user.is_authenticated:
+    #     if request.user.is_superuser or request.user.role == "admin":
+    #         return redirect("admin_dashboard")
+    #     elif request.user.role == "club_admin":
+    #         return redirect("club_admin_dash")
+    return render(request, "accounts/index.html", context)
 
 
 def register(request):
@@ -47,9 +71,9 @@ def dashboard(request):
     }
     return render(request, "accounts/dashboard.html", context)
 
-
 @admin_required
 def add_new(request):
+    clubs = teams(request)
     if request.method == "POST":
         form = ClubAdminCreationForm(request.POST)
         if form.is_valid():
@@ -57,7 +81,7 @@ def add_new(request):
             return redirect("dashboard")
     else:
         form = ClubAdminCreationForm()
-    return render(request, "accounts/add_new.html", {"form": form})
+    return render(request, "accounts/add_new.html", {"form": form, "clubs": clubs})
 
 
 @club_admin_required

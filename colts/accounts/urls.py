@@ -13,5 +13,5 @@ urlpatterns = [
     path("register/", register, name="register"),
     path("add_new/", add_new, name="add_new"),
     path("dashboard/", dashboard, name="dashboard"),
-    path("club_admin_dash/", club_admin_dash, name="club_admin_dash"),
+    path("dash/", club_admin_dash, name="club_admin_dash"),
 ]
