@@ -1,0 +1,62 @@
+{% extends 'accounts/forms_base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Add New League</h2>
+    <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.name.id_for_label }}">
+                League Name
+            </label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.name.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.age_group.id_for_label }}">
+                Age Group
+            </label>
+            {{ form.age_group }}
+            {% if form.age_group.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.age_group.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.gender.id_for_label }}">
+                Gender
+            </label>
+            {{ form.gender }}
+            {% if form.gender.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.gender.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.season.id_for_label }}">
+                Season
+            </label>
+            {{ form.season }}
+            {% if form.season.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.season.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.notes.id_for_label }}">
+                Notes
+            </label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.notes.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="flex items-center justify-between">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Add League
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

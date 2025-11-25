@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserRegistrationForm, ClubAdminCreationForm, AddTeamForm
+from .forms import CustomUserRegistrationForm, ClubAdminCreationForm, AddTeamForm, AddLeagueForm, AddSeasonForm, AddFixtureForm, AddPlayerForm
 from django.contrib.auth import login
 from accounts.decorators import admin_required, club_admin_required
 from app.models import Season, League, Team, Match, Result, Player
@@ -21,6 +21,7 @@ def users(request):
         users = []
     return users
 
+@admin_required
 def index(request):
     club_admins = CustomUser.objects.filter(role="club_admin")
     context = {
@@ -37,7 +38,6 @@ def index(request):
     #     elif request.user.role == "club_admin":
     #         return redirect("club_admin_dash")
     return render(request, "accounts/index.html", context)
-
 
 
 def register(request):
@@ -78,7 +78,7 @@ def add_new(request):
         form = ClubAdminCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("dashboard")
+            return redirect("index")
     else:
         form = ClubAdminCreationForm()
     return render(request, "accounts/add_new.html", {"form": form, "clubs": clubs})
@@ -114,19 +114,64 @@ def new_team(request):
         form = AddTeamForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect("dashboard")
+            return redirect("index")
     else:
         form = AddTeamForm()
     return render(request, "accounts/new_team.html", {"form": form})
 
 @club_admin_required
 def edit_team(request, team_id):
-    # This view now only processes the form submission and redirects.
-    team = Team.objects.get(id=team_id, pk=request.user.club.pk) # Security check
+    team = Team.objects.get(id=team_id, pk=request.user.club.pk)
     if request.method == 'POST':
         form = AddTeamForm(request.POST, request.FILES, instance=team)
         if form.is_valid():
             form.save()
-    # Redirect back to the dashboard whether the form is valid or not.
-    # Invalid form state will be handled by the club_admin_dash view on the next GET request.
     return redirect('club_admin_dash')
+
+@club_admin_required
+def new_league(request):
+    if request.method == "POST":
+        form = AddLeagueForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = AddLeagueForm()
+    return render(request, "accounts/new_league.html", {"form": form})
+
+@club_admin_required
+def new_season(request):
+    if request.method == "POST":
+        form = AddSeasonForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = AddSeasonForm()
+    return render(request, "accounts/new_season.html", {"form": form})
+
+@club_admin_required
+def new_fixture(request):
+    if request.method == "POST":
+        form = AddFixtureForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = AddFixtureForm()
+    return render(request, "accounts/new_fixture.html", {"form": form})
+
+@club_admin_required
+def new_player(request):
+    if request.method == "POST":
+        form = AddPlayerForm(request.POST, user=request.user)
+        if form.is_valid():
+            player = form.save(commit=False)
+            player.team = request.user.club
+            player.save()
+            return redirect("club_admin_dash")
+    else:
+        form = AddPlayerForm(user=request.user)
+    return render(request, "accounts/new_player.html", {"form": form})
+
+

@@ -1,6 +1,6 @@
 from django import forms
 from .models import CustomUser
-from app.models import Team
+from app.models import Team, League, Player, LeagueMembership, Result, Season, Standings, Match
 
 class CustomUserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -8,12 +8,6 @@ class CustomUserRegistrationForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ["username", "first_name", "last_name", "email", "role", "password"]
-
-
-class CustomUserEditForm(forms.ModelForm):
-    class Meta:
-        model = CustomUser
-        fields = ["first_name", "last_name", "email"]
 
 class ClubAdminCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -60,6 +54,67 @@ class AddTeamForm(forms.ModelForm):
         instance = super().save(commit=False)
         if self.cleaned_data.get('crest_upload'):
             instance.crest = self.cleaned_data['crest_upload'].url
+        if commit:
+            instance.save()
+        return instance
+
+class AddLeagueForm(forms.ModelForm):
+    class Meta:
+        model = League
+        fields = ['name', 'age_group', 'gender', 'season', 'notes']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'age_group': forms.TextInput(attrs={'class': 'form-control'}),
+            'gender': forms.TextInput(attrs={'class': 'form-control'}),
+            'season': forms.Select(attrs={'class': 'form-control'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+class AddSeasonForm(forms.ModelForm):
+    class Meta:
+        model = Season
+        fields = ['year', 'start_date', 'end_date', 'archived_status']
+        widgets = {
+            'year': forms.TextInput(attrs={'class': 'form-control'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'archived_status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class AddFixtureForm(forms.ModelForm):
+    class Meta:
+        model = Match
+        fields = ['league', 'season', 'date', 'time', 'venue', 'home_team', 'away_team']
+        widgets = {
+            'league': forms.Select(attrs={'class': 'form-control'}),
+            'season': forms.Select(attrs={'class': 'form-control'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'venue': forms.TextInput(attrs={'class': 'form-control'}),
+            'home_team': forms.Select(attrs={'class': 'form-control'}),
+            'away_team': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class AddPlayerForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        fields = ['name', 'age', 'position', 'bio', 'privacy_consent']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'age': forms.NumberInput(attrs={'class': 'form-control'}),
+            'position': forms.TextInput(attrs={'class': 'form-control'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'privacy_consent': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(AddPlayerForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.user and self.user.club:
+            instance.Team = self.user.club
         if commit:
             instance.save()
         return instance
