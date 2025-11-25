@@ -23,7 +23,7 @@ class League(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=100)
-    crest = models.TextField(max_length=1000, blank=True)
+    crest = models.ImageField(upload_to='crests/', blank=True, null=True)
     team_bio = models.TextField(max_length=1000, blank=True)
     gender = models.CharField(max_length=10)        
     age_group = models.CharField(max_length=20)      

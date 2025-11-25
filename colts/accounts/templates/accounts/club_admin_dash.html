@@ -3,30 +3,106 @@
     <div class="container-fluid">
         <h1 class="text-left mb-2">Welcome Back, {{ user.username }}</h1>
         <h2 class="text-left mb-4">Club: {{ club.name }}</h2>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">Your Players</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ players|length }} Players</h5>
-                        <a href="#" class="btn btn-light">View Players</a>
+    </div>
+    
+    <div id="club-details" class="container-fluid mt-4">
+        <div class="card">
+            <div class="card-header">Club Details</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        {% if club.crest %}
+                            <img src="{{ club.crest }}" alt="{{ club.name }} Crest" class="img-fluid mb-3" style="max-height: 150px;">
+                        {% else %}
+                            <img src="/static/default_crest.png" alt="Default Crest" class="img-fluid mb-3" style="max-height: 150px;">
+                        {% endif %}
+                        <p class="card-text"><strong>{{ club.name }}</strong></p>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card text-white bg-info mb-3">
-                    <div class="card-header">Your Team</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ club.name }}</h5>
-                        <a href="#" class="btn btn-light">Manage Team</a>
+                    <div class="col-md-3">
+                        <p><strong>Bio:</strong> {{ club.team_bio }}</p>
+                        <p><strong>Gender:</strong> {{ club.gender }}</p>
+                        <p><strong>Age Group:</strong> {{ club.age_group }}</p>
+                        <button type="button" class="btn btn-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editClubModal">
+                            Edit Club Details
+                        </button>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card text-white bg-primary mb-3">
+                            <div class="card-header">Your Players</div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ players|length }} Players</h5>
+                                <a href="#" class="btn btn-light">View Players</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="match-summary" class="container-fluid">
+{# Popup to edit team details #}
+<div class="modal fade" id="editClubModal" tabindex="-1" aria-labelledby="editClubModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editClubModalLabel">Edit {{ club.name }} Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" action="{% url 'edit_team' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Team Name</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.crest.id_for_label }}" class="form-label">Crest URL</label>
+                        {{ form.crest }}
+                        {% if form.crest.errors %}
+                            <div class="text-danger">{{ form.crest.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.crest_upload.id_for_label }}" class="form-label">Or Upload Crest</label>
+                        {{ form.crest_upload }}
+                        {% if form.crest_upload.errors %}
+                            <div class="text-danger">{{ form.crest_upload.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.team_bio.id_for_label }}" class="form-label">Team Bio</label>
+                        {{ form.team_bio }}
+                        {% if form.team_bio.errors %}
+                            <div class="text-danger">{{ form.team_bio.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.gender.id_for_label }}" class="form-label">Gender</label>
+                        {{ form.gender }}
+                        {% if form.gender.errors %}
+                            <div class="text-danger">{{ form.gender.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.age_group.id_for_label }}" class="form-label">Age Group</label>
+                        {{ form.age_group }}
+                        {% if form.age_group.errors %}
+                            <div class="text-danger">{{ form.age_group.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div id="match-summary" class="container-fluid mt-3">
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-3">
@@ -131,6 +207,9 @@
 {% endblock %}
 
 {% block footer %}
+
+
+
     {# My account section for the club admin #}
     <div id="club-admin-account" class="container-fluid">
         <div class="card">

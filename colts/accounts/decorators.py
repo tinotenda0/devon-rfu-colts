@@ -29,7 +29,7 @@ def admin_required(view_func):
 def club_admin_required(view_func):
     @login_required
     def _wrapped_view(request, *args, **kwargs):
-        if not request.user.is_superuser or not request.user.role == 'club_admin':
+        if not request.user.role == 'club_admin':
             return HttpResponseForbidden("Club Admin access required.")
         return view_func(request, *args, **kwargs)
     return _wrapped_view
