@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.decorators import admin_required
-from .models import Season
+from .models import Season, League
 from .forms import SeasonForm
 
 # Create your views here.
+
+
 
 @admin_required
 def season_list(request):
@@ -55,8 +57,30 @@ def season_unarchive(request, season_id):
     season.save()
     return redirect('season_list')
 
+def navbar_link_data(request):
+    all_leagues = League.objects.all()
+    return {"all_leagues": all_leagues}
+
+def index_page_data(request):
+    recent_matches = Match.objects.all().order_by('-date')[:4]
+    upcoming_fixtures = Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4]
+    return {
+        "recent_matches": recent_matches,
+        "upcoming_fixtures": upcoming_fixtures,
+    }
+
+from django.utils import timezone
+from app.models import Match
+
+
+
 def index(request):
-    return render(request, "index.html")
+    context = {
+        "all_leagues": League.objects.all(),
+        "recent_matches": Match.objects.all().order_by('-date')[:4],
+        "upcoming_fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
+    }
+    return render(request, "index.html", context=context)
 
 
 def table(request):
@@ -73,3 +97,5 @@ def about(request):
 
 def auth(request):
     return render(request, "auth.html")
+
+

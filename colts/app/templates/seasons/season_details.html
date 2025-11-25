@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ season.year }} Details{% endblock %}
+
+{% block hero %}
+    {{ season.year }} Season
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header text-center">
+            <h1 class="mt-3">{{ season.year }}</h1>
+            <h5 class="text-muted">{{ season.start_date }} - {{ season.end_date }}</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Description:</strong> {{ season.description|default:"No description available." }}</p>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-3 text-center">Leagues in {{ season.year }}</h2>
+    {% if leagues %}
+        <div class="row">
+            {% for league in leagues %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ league.name }}</h5>
+                            <p class="card-text">{{ league.gender }} - {{ league.age_group }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'league_details' league.id %}" class="btn btn-sm btn-outline-primary">View League Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No leagues found for this season.</p>
+    {% endif %}
+
+    <h2 class="mt-5 mb-3 text-center">Matches in {{ season.year }}</h2>
+    {% if matches %}
+        <div class="row">
+            {% for match in matches %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center">{{ match.home_team.name }} vs {{ match.away_team.name }}</h5>
+                            <p class="card-text text-center">{{ match.date }} at {{ match.time }}</p>
+                            <p class="card-text text-center">League: <a href="{% url 'league_details' match.league.id %}">{{ match.league.name }}</a></p>
+                            {% if match.result %}
+                                <p class="card-text text-center">Result: {{ match.result.home_score }} - {{ match.result.away_score }}</p>
+                            {% else %}
+                                <p class="card-text text-center">Match not yet played</p>
+                            {% endif %}
+                            <div class="mt-auto text-center">
+                                <a href="{% url 'match_details' match.id %}" class="btn btn-sm btn-outline-primary">View Match Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No matches found for this season.</p>
+    {% endif %}
+</div>
+{% endblock %}

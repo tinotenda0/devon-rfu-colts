@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ team.name }} Details{% endblock %}
+
+{% block hero %}
+    {{ team.name }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header text-center">
+            {% if team.crest %}
+                <img src="{{ team.crest.url }}" alt="{{ team.name }} Crest" class="img-fluid" style="max-height: 150px;">
+            {% else %}
+                <img src="{% static 'crest-placeholder.png' %}" alt="Default Crest" class="img-fluid" style="max-height: 150px;">
+            {% endif %}
+            <h1 class="mt-3">{{ team.name }}</h1>
+        </div>
+        <div class="card-body">
+            <p><strong>Bio:</strong> {{ team.team_bio }}</p>
+            <p><strong>Gender:</strong> {{ team.gender }}</p>
+            <p><strong>Age Group:</strong> {{ team.age_group }}</p>
+            {% if team.club_admin %}
+                <p><strong>Club Admin:</strong> {{ team.club_admin.username }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-3 text-center">Players</h2>
+    <div class="alert alert-info " role="alert">
+        Only players who have given privacy consent are displayed publicly.
+    </div>
+
+    {% if players %}
+        <div class="row">
+            {% for player in players %}
+                {% if player.privacy_consent %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100 player-card">
+                            {% if player.image %}
+                                <img src="{{ player.image.url }}" class="card-img-top" alt="{{ player.name }}" style="max-height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'player-placeholder.png' %}" class="card-img-top" alt="Default Player Image" style="max-height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ player.name }}</h5>
+                                <p class="card-text">{{ player.position }}</p>
+                                <div class="mt-auto text-center">
+                                    <a href="{% url 'player_details' player.id %}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No players found for this team.</p>
+    {% endif %}
+
+{# Display full League tables they're in #}
+    <h2 class="mt-5 mb-3 text-center">Leagues {{ team.name }} is in</h2>
+    {% if team.leaguemembership_set.all %}
+        <div class="row">
+            {% for membership in team.leaguemembership_set.all %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ membership.league.name }}</h5>
+                            <p class="card-text">Season: {{ membership.season.year }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'league_details' membership.league.id %}" class="btn btn-sm btn-outline-primary">View League Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">This team is not currently in any leagues.</p>
+    {% endif %}
+
+
+
+
+    <h2 class="mt-5 mb-3 text-center">Recent Matches</h2>
+    {% if matches %}
+        <div class="row">
+            {% for match in matches %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center">{{ match.home_team.name }} vs {{ match.away_team.name }}</h5>
+                            <p class="card-text text-center">{{ match.date }} at {{ match.time }}</p>
+                            {% if match.result %}
+                                <p class="card-text text-center">Result: {{ match.result.home_score }} - {{ match.result.away_score }}</p>
+                            {% else %}
+                                <p class="card-text text-center">Match not yet played</p>
+                            {% endif %}
+                            <div class="mt-auto text-center">
+                                <a href="{% url 'match_details' match.id %}" class="btn btn-sm btn-outline-primary">View Match Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No recent matches for this team.</p>
+    {% endif %}
+</div>
+{% endblock %}

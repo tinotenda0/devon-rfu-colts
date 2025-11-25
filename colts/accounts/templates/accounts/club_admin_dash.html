@@ -14,7 +14,7 @@
                         {% if club.crest %}
                             <img src="{{ club.crest }}" alt="{{ club.name }} Crest" class="img-fluid mb-3" style="max-height: 150px;">
                         {% else %}
-                            <img src="/static/default_crest.png" alt="Default Crest" class="img-fluid mb-3" style="max-height: 150px;">
+                            <img src="/static/crest-placeholder.png" alt="Default Crest" class="img-fluid mb-3" style="max-height: 150px;">
                         {% endif %}
                         <p class="card-text"><strong>{{ club.name }}</strong></p>
                     </div>
@@ -126,53 +126,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="club-league-table" class="container-fluid">
-        <div class="card">
-            <div class="card-header">League Table for {{ club.name }}</div>
-            <div class="card-body">
-                {% if club_league_table %}
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Team</th>
-                                <th>Played</th>
-                                <th>Wins</th>
-                                <th>Draws</th>
-                                <th>Losses</th>
-                                <th>Points For</th>
-                                <th>Points Against</th>
-                                <th>Point Diff</th>
-                                <th>Tries For</th>
-                                <th>Tries Against</th>
-                                <th>Bonus Points</th>
-                                <th>Total Points</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in club_league_table %}
-                                <tr {% if row.team == club %}class="table-primary"{% endif %}>
-                                    <td>{{ row.team.name }}</td>
-                                    <td>{{ row.played }}</td>
-                                    <td>{{ row.wins }}</td>
-                                    <td>{{ row.draws }}</td>
-                                    <td>{{ row.losses }}</td>
-                                    <td>{{ row.points_for }}</td>
-                                    <td>{{ row.points_against }}</td>
-                                    <td>{{ row.point_difference }}</td>
-                                    <td>{{ row.tries_for }}</td>
-                                    <td>{{ row.tries_against }}</td>
-                                    <td>{{ row.bonus_points }}</td>
-                                    <td>{{ row.total_points }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p>No league table data available for your club.</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {# auto standings #}
 
     <div id="all-players" class="container-fluid">
     <div class="card mt-4">
@@ -183,9 +137,9 @@
                         <div class="col-md-3 mb-3">
                             <div class="card player-card h-100">
                                 {% if player.image %}
-                                    <img src="{{ player.image.url }}" class="card-img-top" alt="{{ player.name }}">
+                                    <img src="{{ player.image.url }}" class="card-img-top" alt="{{ player.name }}" style="max-height: 200px; object-fit: cover;">
                                 {% else %}
-                                    <img src="/static/default_player.png" class="card-img-top" alt="Default Player Image">
+                                    <img src="/static/player-placeholder.png" class="card-img-top" alt="Default Player Image" style="object-fit: cover;">
                                 {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title">{{ player.name }}</h5>

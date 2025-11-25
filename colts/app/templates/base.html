@@ -63,15 +63,39 @@
           <li class="nav-item">
             <a class="nav-link fw-bold text-white" href="/about">ABOUT US</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link fw-bold text-white" href="/matches">FIXTURES</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link fw-bold text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              LEAGUES
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for league in all_leagues %}
+                <li><a class="dropdown-item" href="{% url 'league_details' league.id %}">{{ league.name }}</a></li>
+              {% endfor %}
+            </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-bold text-white" href="/table">TABLE</a>
+            <a class="nav-link fw-bold text-white" href="#fixtures">FIXTURES</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-bold text-white" href="/matches">RESULTS</a>
+            <a class="nav-link fw-bold text-white" href="/contact">CONTACT</a>
           </li>
+            {% if user.is_authenticated %}
+              {% if user.is_superuser or user.role == "admin" %}
+                  <li class="nav-item">
+                <a class="nav-link fw-bold text-white" href="{% url 'index' %}">ADMIN</a>
+                  </li>
+                  <li class="nav-item">
+              <a class="nav-link fw-bold text-white" href="{% url 'logout' %}">LOGOUT</a>
+                  </li>
+              {% elif user.role == "club_admin" %}
+                  <li class="nav-item">
+                <a class="nav-link fw-bold text-white" href="{% url 'club_admin_dash' %}">MY CLUB</a>
+                  </li>
+                  <li class="nav-item">
+              <a class="nav-link fw-bold text-white" href="{% url 'logout' %}">LOGOUT</a>
+                  </li>
+              {% endif %}
+            {% endif %}
         </ul>
       </div>
     </div>
