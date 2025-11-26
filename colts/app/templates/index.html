@@ -1,77 +1,152 @@
-{% extends "base.html" %}
+ {% extends "base.html" %}
 {% load static %}
 {% block title %}Home - Colts{% endblock %}
 {% block content %}
 <!-- {% block hero %}The Heart of Rugby in Devon<br><a href="#about-section" class="btn btn-dark">ABOUT US</a>{% endblock %} -->
 
-
-
-<section class="matches-fixture container-fluid">
-  <div class="row g-0">
-
-    <div class="col-lg-6 side-left p-5">
-      <div class="container">
-        <h3 class="fw-bold text-center text-uppercase mb-4">Recent Matches</h3>
-        <div class="row gy-3">
-          <div class="col-12 center-items">
-            <div class="card-match">
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-              <div>TEAM 03 - 14 TEAM</div>
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-            </div>
-          </div>
-          <div class="col-12 center-items">
-            <div class="card-match">
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-              <div>TEAM 76 - 44 TEAM</div>
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-            </div>
-          </div>
-          <div class="col-12 center-items">
-            <div class="card-match">
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-              <div>TEAM 67 - 17 TEAM</div>
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-            </div>
-          </div>
-          <div class="col-12 center-items">
-            <div class="card-match">
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-              <div>TEAM 07 - 12 TEAM</div>
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-            </div>
-          </div>
+    <!-- MATCHES SECTION -->
+<section class="matches-fixture container-fluid py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder text-uppercase mb-2 hover-text">Match Center</h2>
         </div>
-      </div>
-    </div>
 
-    <div class="col-lg-6 side-right p-5" id="fixtures">
-      <div class="container">
-        <h3 class="fw-bold text-center text-uppercase mb-4" style="color:var(--colts-green)">FIXTURES</h3>
-        <div class="row gy-3 fixture-list">
-          {% for i in "1234" %}
-          <div class="col-12 center-items">
-            <div class="card-fixture d-flex justify-content-center align-items-center px-3">
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
-              <div>TEAM VS TEAM</div>
-              <img src="{% static 'crest-placeholder.png' %}" alt="shield" width="28" height="28">
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="d-flex align-items-center mb-4">
+                    <h5 class="fw-bolder mb-0 text-uppercase hover-text">Upcoming Fixtures</h5>
+                </div>
+
+                {% for fixture in upcoming_fixtures|slice:":5" %}
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4 hover-card">
+                        <!-- Header -->
+                        <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pt-4 pb-0">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 text-uppercase fw-bolder" style="font-size: 0.7rem;">{{ fixture.league.name|default:"Premiership" }}</span>
+                            <span class="text-muted small fw-bolder"><i class="far fa-calendar me-2"></i>{{ fixture.date|date:"D, d M" }}</span>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body px-4 py-4">
+                            <div class="row align-items-center text-center">
+                                <!-- Home Team -->
+                                <div class="col-4">
+                                    {% if fixture.home_team.crest %}
+                                        <img src="{{ fixture.home_team.crest.url }}" alt="{{ fixture.home_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Home Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                    <h6 class="fw-bolder mb-0 text-truncate">{{ fixture.home_team.name }}</h6>
+                                </div>
+
+                                <!-- Center Info -->
+                                <div class="col-4">
+                                    <div class="h2 fw-bolder text-primary mb-1">{{ fixture.date|date}}</div>
+                                    {% if fixture.date %}
+                                        <div class="text-success small fw-bolder">
+                                            <i class="fas fa-clock me-1"></i>{{ fixture.date|timeuntil }} to go
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Away Team -->
+                                <div class="col-4">
+                                    {% if fixture.away_team.crest %}
+                                        <img src="{{ fixture.away_team.crest.url }}" alt="{{ fixture.away_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Away Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                    <h6 class="fw-bolder mb-0 text-truncate">{{ fixture.away_team.name }}</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer bg-light border-0 px-4 py-3">
+                            <div class="text-muted small">
+                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ fixture.venue|default:"Home Ground" }}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info border-0 shadow-sm rounded-4 text-center py-4">
+                        <i class="fas fa-info-circle me-2"></i>No upcoming fixtures scheduled.
+                    </div>
+                {% endfor %}
+
+                <div class="text-center mt-2 mb-5 mb-lg-0">
+                    <a href="{% url 'matches' %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm">View All Fixtures</a>
+                </div>
             </div>
-          </div>
-          {% endfor %}
+
+            <div class="col-lg-6 col-md-12">
+                 <div class="d-flex align-items-center mb-4">
+                    <h5 class="fw-bolder mb-0 text-uppercase hover-text">Recent Results</h5>
+                </div>
+
+                {% for result in recent_matches|slice:":5" %}
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4 hover-card">
+                        <!-- Header -->
+                        <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pt-4 pb-0">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 text-uppercase fw-bolder" style="font-size: 0.7rem;">{{ result.match.league.name|default:"League" }}</span>
+                            <span class="text-muted small fw-bolder"><span class="badge bg-secondary me-2">FT</span>{{ result.match.date|date:"d M" }}</span>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body px-4 py-4">
+                            <div class="row align-items-center text-center">
+                                <!-- Home Team -->
+                                <div class="col-4">
+                                    {% if result.match.home_team.crest %}
+                                        <img src="{{ result.match.home_team.crest.url }}" alt="{{ result.match.home_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Home Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                    <h6 class="fw-bolder mb-1 text-truncate">{{ result.match.home_team.name }}</h6>
+                                </div>
+
+                                <!-- Score -->
+                                <div class="col-4">
+                                    <div class="bg-white rounded-3 py-2 px-1 mb-2 border border-secondary">
+                                        <div class="h2 fw-bolder text-primary mb-0" style="letter-spacing: -1px;">{{ result.home_score }} - {{ result.away_score }}</div>
+                                    </div>
+                                </div>
+
+                                <!-- Away Team -->
+                                <div class="col-4">
+                                    {% if result.match.away_team.crest %}
+                                        <img src="{{ result.match.away_team.crest.url }}" alt="{{ result.match.away_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Away Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                    <h6 class="fw-bolder mb-1 text-truncate">{{ result.match.away_team.name }}</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer bg-light border-0 px-4 py-3">
+                            <div class="text-muted small">
+                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ result.match.venue|default:"Home Ground" }}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info border-0 shadow-sm rounded-4 text-center py-4">
+                        <i class="fas fa-info-circle me-2"></i>No recent results found.
+                    </div>
+                {% endfor %}
+
+                <div class="text-center mt-2">
+                    <a href="{% url 'matches' %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm">View All Results</a>
+                </div>
+            </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
 </section>
-
-    {# Real result data with scores, number of tries, and date played#}
-
-
-
 
 <section class="sponsors-strip text-center">
   <div class="container">
-    <h4 class="fw-bold mb-3">OUR SPONSORS</h4>
+    <h4 class="fw-bolder mb-3">OUR SPONSORS</h4>
 
 <div id="sponsorCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
   <div class="carousel-inner d-flex align-items-center">
@@ -95,7 +170,7 @@
 </section>
 
 <section id="about-section" class="about-section">
-    <h3 class="text-center fw-bold text-uppercase mb-4">About Us</h3>
+    <h3 class="text-center fw-bolder text-uppercase mb-4">About Us</h3>
       <div class="container d-flex align-items-center">
         <div class="about-card">
           <div class="align-items-center">
@@ -122,8 +197,6 @@
           neque, reprehenderit cum eos, ad sunt culpa ducimus voluptate molestiae accusamus. Est numquam modi architecto, odio a
           quam magnam delectus laudantium natus.</p>
       </div>
-      <!-- <div class="col-lg-8">
-        <div class="about-card p-4"> -->
   </div>
 </section>
 {% endblock %}

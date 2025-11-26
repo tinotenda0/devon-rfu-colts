@@ -30,7 +30,7 @@
   </style>
 </head>
 
-<body style="background-color: #00a755">
+<body class="bg-light">
   <nav class="py-1" style="background: #a5db2a">
     <div class="container-fluid d-flex justify-content-between align-items-center small">
       <div>
@@ -61,10 +61,10 @@
       <div class="collapse navbar-collapse justify-content-end" id="clubNavbar">
         <ul class="navbar-nav mb-2 mb-lg-0 gap-4">
           <li class="nav-item">
-            <a class="nav-link fw-bold text-white" href="/about">ABOUT US</a>
+            <a class="nav-link fw-bolder text-white" href="/about">ABOUT US</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link fw-bold text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link fw-bolder text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               LEAGUES
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -74,25 +74,25 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-bold text-white" href="#fixtures">FIXTURES</a>
+            <a class="nav-link fw-bolder text-white" href="#fixtures">FIXTURES</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-bold text-white" href="/contact">CONTACT</a>
+            <a class="nav-link fw-bolder text-white" href="/contact">CONTACT</a>
           </li>
             {% if user.is_authenticated %}
               {% if user.is_superuser or user.role == "admin" %}
                   <li class="nav-item">
-                <a class="nav-link fw-bold text-white" href="{% url 'index' %}">ADMIN</a>
+                <a class="nav-link fw-bolder text-white" href="{% url 'index' %}">ADMIN</a>
                   </li>
                   <li class="nav-item">
-              <a class="nav-link fw-bold text-white" href="{% url 'logout' %}">LOGOUT</a>
+              <a class="nav-link fw-bolder text-white" href="{% url 'logout' %}">LOGOUT</a>
                   </li>
               {% elif user.role == "club_admin" %}
                   <li class="nav-item">
-                <a class="nav-link fw-bold text-white" href="{% url 'club_admin_dash' %}">MY CLUB</a>
+                <a class="nav-link fw-bolder text-white" href="{% url 'club_admin_dash' %}">MY CLUB</a>
                   </li>
                   <li class="nav-item">
-              <a class="nav-link fw-bold text-white" href="{% url 'logout' %}">LOGOUT</a>
+              <a class="nav-link fw-bolder text-white" href="{% url 'logout' %}">LOGOUT</a>
                   </li>
               {% endif %}
             {% endif %}
@@ -112,7 +112,7 @@
 
   <div class="flex-container">{% block content %} {% endblock %}</div>
 
-  <div class="footer bg-dark text-white py-4 mt-5" id="footer">
+  <div class="footer bg-dark text-white py-4    " id="footer">
     <div class="container text-center">
       <div class="row align-items-start">
         <div class="col">

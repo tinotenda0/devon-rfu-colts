@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.decorators import admin_required
-from .models import Season, League
+from .models import Season, League, Result
 from .forms import SeasonForm
 
 # Create your views here.
@@ -77,8 +77,11 @@ from app.models import Match
 def index(request):
     context = {
         "all_leagues": League.objects.all(),
-        "recent_matches": Match.objects.all().order_by('-date')[:4],
+        # "recent_matches": Result.objects.all(),
+        # "recent_matches": Match.objects.all().order_by('date')[:4],
+        "recent_matches": Result.objects.select_related('match').order_by('-match__date')[:4],
         "upcoming_fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
+
     }
     return render(request, "index.html", context=context)
 

@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+
 from .forms import CustomUserRegistrationForm, ClubAdminCreationForm, AddTeamForm, AddLeagueForm, AddSeasonForm, AddFixtureForm, AddPlayerForm
 from django.contrib.auth import login
 from accounts.decorators import admin_required, club_admin_required
@@ -279,13 +281,16 @@ def calculate_standings(league):
 def league_details(request, league_id):
     league = get_object_or_404(League, pk=league_id)
     teams_in_league = Team.objects.filter(leaguemembership__league=league)
-    matches_in_league = Match.objects.filter(league=league).order_by('date', 'time')
+    fixtures = Match.objects.filter(league=league, date__gte=timezone.now()).order_by('date')
+    recent_matches = Result.objects.filter(match__league=league).order_by('-match__date')[:5]
+
     standings = calculate_standings(league)
 
     context = {
         'league': league,
         'teams_in_league': teams_in_league,
-        'matches_in_league': matches_in_league,
+        'fixtures': fixtures,
+        'recent_matches': recent_matches,
         'standings': standings,
     }
     return render(request, 'leagues/league_details.html', context)
@@ -293,14 +298,20 @@ def league_details(request, league_id):
 def team_details(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
     players = Player.objects.filter(team=team)
-    home_matches = Match.objects.filter(home_team=team).order_by("-date")
-    away_matches = Match.objects.filter(away_team=team).order_by("-date")
-    matches = (home_matches | away_matches).distinct().order_by("-date")[:10]
+    home_matches = Match.objects.filter(home_team=team, date__gte=timezone.now()).order_by('date')
+    away_matches = Match.objects.filter(away_team=team, date__gte=timezone.now()).order_by('date')
+    matches = (home_matches | away_matches).distinct()
+    fixtures = Match.objects.filter(home_team=team, date__gte=timezone.now()).order_by('date')
+    home_results =  Result.objects.filter(match__home_team=team).order_by('-match__date')
+    away_results =  Result.objects.filter(match__away_team=team).order_by('-match__date')
+    results = (home_results | away_results).distinct()
 
     context = {
         'team': team,
         'players': players,
         'matches': matches,
+        'fixtures': fixtures,
+        'results': results,
     }
     return render(request, 'teams/team_details.html', context)
 
