@@ -80,7 +80,7 @@ def index(request):
         # "recent_matches": Result.objects.all(),
         # "recent_matches": Match.objects.all().order_by('date')[:4],
         "recent_matches": Result.objects.select_related('match').order_by('-match__date')[:4],
-        "upcoming_fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
+        "fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
 
     }
     return render(request, "index.html", context=context)

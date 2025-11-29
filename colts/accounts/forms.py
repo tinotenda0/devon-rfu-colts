@@ -95,6 +95,27 @@ class AddFixtureForm(forms.ModelForm):
             'away_team': forms.Select(attrs={'class': 'form-control'}),
         }
 
+class AddResultForm(forms.ModelForm):
+    class Meta:
+        model = Result
+        fields = [
+            "match",
+            "home_score",
+            "away_score",
+            "home_tries",
+            "away_tries",
+            "notes",
+        ]
+        widgets = {
+            "match": forms.Select(attrs={"class": "form-control"}),
+            "home_score": forms.NumberInput(attrs={"class": "form-control"}),
+            "away_score": forms.NumberInput(attrs={"class": "form-control"}),
+            "home_tries": forms.NumberInput(attrs={"class": "form-control"}),
+            "away_tries": forms.NumberInput(attrs={"class": "form-control"}),
+            "notes": forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+
 class AddPlayerForm(forms.ModelForm):
     class Meta:
         model = Player

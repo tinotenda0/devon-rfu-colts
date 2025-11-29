@@ -105,6 +105,10 @@
   <header class="hero">
     <div class="container">
         <h1 class="hero-title text-white">{% block hero %} {% endblock %}</h1>
+        <div class="fw-bold fs-1 text-white">
+        <img src="{% block img %}{% endblock %}" alt="Devon RFU logo" height="48" class="me-3" />
+            <h2 class="fw-bold fs-1 text-white" style="text-decoration: none;">{% block team %} {% endblock %}</h2>
+    </div>
     </div>
   </header>
   </div>

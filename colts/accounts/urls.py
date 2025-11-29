@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register, index, add_new, dashboard, club_admin_dash, new_team, edit_team, new_league, new_season, new_fixture, new_player
+from .views import register, index, add_new, dashboard, club_admin_dash, new_team, edit_team, new_league, new_season, new_fixture, new_player, new_result
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
@@ -20,4 +20,5 @@ urlpatterns = [
     path("new_season/", new_season, name="new_season"),
     path("new_fixture/", new_fixture, name="new_fixture"),
     path("new_player/", new_player, name="new_player"),
+    path("new_result/", new_result, name="new_result"),
 ]

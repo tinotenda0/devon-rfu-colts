@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .forms import CustomUserRegistrationForm, ClubAdminCreationForm, AddTeamForm, AddLeagueForm, AddSeasonForm, AddFixtureForm, AddPlayerForm
+from .forms import CustomUserRegistrationForm, ClubAdminCreationForm, AddTeamForm, AddLeagueForm, AddSeasonForm, AddFixtureForm, AddPlayerForm, AddResultForm
 from django.contrib.auth import login
 from accounts.decorators import admin_required, club_admin_required
 from app.models import Season, League, Team, Match, Result, Player
@@ -164,6 +164,18 @@ def new_fixture(request):
     return render(request, "accounts/new_fixture.html", {"form": form})
 
 @club_admin_required
+def new_result(request):
+    if request.method == "POST":
+        form = AddResultForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = AddResultForm()
+    return render(request, "accounts/new_result.html", {"form": form})
+
+
+@club_admin_required
 def new_player(request):
     if request.method == "POST":
         form = AddPlayerForm(request.POST, user=request.user)
@@ -309,7 +321,7 @@ def team_details(request, team_id):
     context = {
         'team': team,
         'players': players,
-        'matches': matches,
+        'recent_matches': matches,
         'fixtures': fixtures,
         'results': results,
     }
@@ -340,7 +352,7 @@ def season_details(request, season_id):
     context = {
         'season': season,
         'leagues': leagues,
-        'matches': matches,
+        'recent_matches': matches,
     }
     return render(request, 'seasons/season_details.html', context)
 

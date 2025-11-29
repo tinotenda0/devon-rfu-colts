@@ -1,0 +1,148 @@
+{% load static %}
+{% block match %}
+<section class="matches-fixture container-fluid py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder text-uppercase mb-2 hover-text">Match Center</h2>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-6 col-md-12">
+                <div class="d-flex align-items-center mb-4">
+                    <h5 class="fw-bolder mb-0 text-uppercase hover-text">Upcoming Fixtures</h5>
+                </div>
+
+                {% for fixture in fixtures|slice:":5" %}
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4 hover-card">
+                        <!-- Header -->
+                        <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pt-4 pb-0">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 text-uppercase fw-bolder" style="font-size: 0.7rem;">{{ fixture.league.name|default:"Premiership" }}</span>
+                            <span class="text-muted small fw-bolder"><i class="far fa-calendar me-2"></i>{{ fixture.date|date:"D, d M" }}</span>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body px-4 py-4">
+                            <div class="row align-items-center text-center">
+                                <!-- Home Team -->
+                                <div class="col-4">
+                                    {% if fixture.home_team.crest %}
+                                        <img src="{{ fixture.home_team.crest.url }}" alt="{{ fixture.home_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Home Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                </div>
+
+                                <!-- Center Info -->
+                                <div class="col-4">
+                                    <div class="h2 fw-bolder text-primary mb-1">{{ fixture.date|date}}</div>
+                                    {% if fixture.date %}
+                                        <div class="text-success small fw-bolder">
+                                            <i class="fas fa-clock me-1"></i>{{ fixture.date|timeuntil }} to go
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Away Team -->
+                                <div class="col-4">
+                                    {% if fixture.away_team.crest %}
+                                        <img src="{{ fixture.away_team.crest.url }}" alt="{{ fixture.away_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Away Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                {% with team_id=result.match.away_team.id %}
+    {% if team_id %}
+        <a href="{% url 'team_details' team_id %}" class="text-decoration-none">
+            <h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ result.match.away_team.name }}</h6>
+        </a>
+    {% else %}
+        <h6 class="fw-bold text-dark text-truncate text-uppercase">{{ result.match.away_team.name|default:"Unknown Away Team" }}</h6>
+    {% endif %}
+{% endwith %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer bg-light border-0 px-4 py-3">
+                            <div class="text-muted small">
+                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ fixture.venue|default:"Home Ground" }}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info border-0 shadow-sm rounded-4 text-center py-4">
+                        <i class="fas fa-info-circle me-2"></i>No upcoming fixtures scheduled.
+                    </div>
+                {% endfor %}
+
+                <div class="text-center mt-2 mb-5 mb-lg-0">
+                    <a href="{% url 'matches' %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm">View All Fixtures</a>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                 <div class="d-flex align-items-center mb-4">
+                    <h5 class="fw-bolder mb-0 text-uppercase hover-text">Recent Results</h5>
+                </div>
+
+                {% for result in recent_matches|slice:":5" %}
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4 hover-card">
+                        <!-- Header -->
+                        <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pt-4 pb-0">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 text-uppercase fw-bolder" style="font-size: 0.7rem;">{{ result.match.league.name|default:"League" }}</span>
+                            <span class="text-muted small fw-bolder"><span class="badge bg-secondary me-2">FT</span>{{ result.match.date|date:"d M" }}</span>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body px-4 py-4">
+                            <div class="row align-items-center text-center">
+                                <!-- Home Team -->
+                                <div class="col-4">
+                                    {% if result.match.home_team.crest %}
+                                        <img src="{{ result.match.home_team.crest.url }}" alt="{{ result.match.home_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Home Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                <a href="{% url 'team_details' result.match.home_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ result.match.home_team.name }}</h6></a>
+                                </div>
+
+                                <!-- Score -->
+                                <div class="col-4">
+                                    <div class="bg-white rounded-3 py-2 px-1 mb-2 border border-secondary">
+                                        <div class="h2 fw-bolder text-primary mb-0" style="letter-spacing: -1px;">{{ result.home_score }} - {{ result.away_score }}</div>
+                                    </div>
+                                </div>
+
+                                <!-- Away Team -->
+                                <div class="col-4">
+                                    {% if result.match.away_team.crest %}
+                                        <img src="{{ result.match.away_team.crest.url }}" alt="{{ result.match.away_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Away Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                    <a href="{% url 'team_details' result.match.away_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ result.match.away_team.name }}</h6></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="card-footer bg-light border-0 px-4 py-3">
+                            <div class="text-muted small">
+                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ result.match.venue|default:"Home Ground" }}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info border-0 shadow-sm rounded-4 text-center py-4">
+                        <i class="fas fa-info-circle me-2"></i>No recent results found.
+                    </div>
+                {% endfor %}
+
+                <div class="text-center mt-2">
+                    <a href="{% url 'matches' %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm">View All Results</a>
+                </div>
+            </div>
+            </div>
+        </div>
+</section>
+{% endblock %}
