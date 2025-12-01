@@ -30,13 +30,15 @@
                                     {% else %}
                                         <img src="{% static 'crest-placeholder.png' %}" alt="Home Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
                                     {% endif %}
+                                <a href="{% url 'team_details' fixture.home_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ fixture.home_team.name }}</h6></a>
                                 </div>
 
                                 <!-- Center Info -->
                                 <div class="col-4">
-                                    <div class="h2 fw-bolder text-primary mb-1">{{ fixture.date|date}}</div>
+                                    <div class="h2 fw-bolder text-primary mb-1">VS</div>
                                     {% if fixture.date %}
                                         <div class="text-success small fw-bolder">
+                                            <i class="fas fa-calendar me-1"></i>{{ fixture.date|date}}<br>
                                             <i class="fas fa-clock me-1"></i>{{ fixture.date|timeuntil }} to go
                                         </div>
                                     {% endif %}
@@ -49,24 +51,19 @@
                                     {% else %}
                                         <img src="{% static 'crest-placeholder.png' %}" alt="Away Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
                                     {% endif %}
-                                {% with team_id=result.match.away_team.id %}
-    {% if team_id %}
-        <a href="{% url 'team_details' team_id %}" class="text-decoration-none">
-            <h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ result.match.away_team.name }}</h6>
-        </a>
-    {% else %}
-        <h6 class="fw-bold text-dark text-truncate text-uppercase">{{ result.match.away_team.name|default:"Unknown Away Team" }}</h6>
-    {% endif %}
-{% endwith %}
+                                <a href="{% url 'team_details' fixture.away_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ fixture.away_team.name }}</h6></a>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Footer -->
-                        <div class="card-footer bg-light border-0 px-4 py-3">
-                            <div class="text-muted small">
+                        <div class="card-footer d-flex flex-row bg-light border-0 px-4 py-3 justify-content-between">
+                            <div class="text-muted small align-self-center">
                                 <i class="fas fa-map-marker-alt text-success me-2"></i>{{ fixture.venue|default:"Home Ground" }}
                             </div>
+                            <div class="text-muted small">
+                            <a href="{% url 'match_details' fixture.id %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm">View Details</a>
+                                </div>
                         </div>
                     </div>
                 {% empty %}
@@ -126,10 +123,13 @@
                         </div>
 
                         <!-- Footer -->
-                        <div class="card-footer bg-light border-0 px-4 py-3">
-                            <div class="text-muted small">
-                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ result.match.venue|default:"Home Ground" }}
+                        <div class="card-footer d-flex flex-row bg-light border-0 px-4 py-3 justify-content-between">
+                            <div class="text-muted small align-self-center">
+                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ result.venue|default:"Home Ground" }}
                             </div>
+                            <div class="text-muted small">
+                            <a href="{% url 'match_details' result.match.id %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm">View Details</a>
+                                </div>
                         </div>
                     </div>
                 {% empty %}

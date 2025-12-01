@@ -81,7 +81,6 @@ def index(request):
         # "recent_matches": Match.objects.all().order_by('date')[:4],
         "recent_matches": Result.objects.select_related('match').order_by('-match__date')[:4],
         "fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
-
     }
     return render(request, "index.html", context=context)
 
@@ -91,14 +90,24 @@ def table(request):
 
 
 def matches(request):
-    return render(request, "matches.html")
+    context = {
+        "all_leagues": League.objects.all(),
+        # "recent_matches": Result.objects.all(),
+        # "recent_matches": Match.objects.all().order_by('date')[:4],
+        "recent_matches": Result.objects.select_related('match').order_by('-match__date')[:4],
+        "fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
+    }
+    return render(request, "matches/matches.html", context=context)
 
 
 def about(request):
-    return render(request, "about.html")
+    all_leagues = League.objects.all()
+    return render(request, "about.html", {"all_leagues": all_leagues})
 
 
 def auth(request):
     return render(request, "auth.html")
 
-
+def contact(request):
+    all_leagues = League.objects.all()
+    return render(request, "contact.html", {"all_leagues": all_leagues})

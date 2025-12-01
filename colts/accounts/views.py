@@ -321,7 +321,7 @@ def team_details(request, team_id):
     context = {
         'team': team,
         'players': players,
-        'recent_matches': matches,
+        'recent_matches': results,
         'fixtures': fixtures,
         'results': results,
     }

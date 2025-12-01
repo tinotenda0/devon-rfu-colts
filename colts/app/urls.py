@@ -13,6 +13,7 @@ urlpatterns = [
     path("matches", views.matches, name="matches"),
     path("about", views.about, name="about"),
     path("auth", views.auth, name="auth"),
+    path("contact", views.contact, name="contact"),
     path("leagues/<int:league_id>/", league_details, name="league_details"),
     path("teams/<int:team_id>/", team_details, name="team_details"),
     path("players/<int:player_id>/", player_details, name="player_details"),
