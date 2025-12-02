@@ -53,6 +53,10 @@ class Match(models.Model):
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='home_matches')
     away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='away_matches')
 
+    def __str__(self):
+        return f"{self.home_team} vs {self.away_team} on {self.date}"
+
+
 class Result(models.Model):
     match = models.OneToOneField(Match, on_delete=models.CASCADE)
     home_score = models.IntegerField()

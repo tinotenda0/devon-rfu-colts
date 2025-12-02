@@ -1,0 +1,48 @@
+{% extends 'accounts/base.html' %}
+
+{% block hero %}
+<div class="container-fluid mt-2">
+        <h1 class="text-left fw-bold text-dark mb-2">Welcome Back, {{ user.username }}</h1>
+        <h2 class="text-left text-muted fw-semibold mb-4">Club: {{ club.name }}</h2>
+    </div>
+    <div id="all-players" class="container-fluid mb-4">
+    <div class="card bg-white border-primary border-0 shadow border-start border-5 mt-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title text-uppercase fw-bold mb-0">Players</h5>
+                    <a href="{% url 'new_player' %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                        <i class="fas fa-user-plus me-1"></i> Add Player
+                    </a>
+                </div>
+
+                <div class="row justify-content-around">
+                    {% for player in players %}
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm hover-card border-0 player-card h-100 justify-content-center align-items-center">
+                                {% if player.image %}
+                                    <img src="{{ player.image.url }}" class="card-img-top" alt="{{ player.name }}" style="max-height: 200px; object-fit: cover;">
+                                {% else %}
+                                    <img src="/static/player-placeholder.png" class="card-img-top" alt="Default Player Image" style="object-fit: cover;">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title text-center fw-bold text-uppercase">{{ player.name }}</h5>
+                                    <p class="card-text text-center fw-semibold text-uppercase text-muted">{{ player.position }}</p>
+                                    <a href="{% url 'player_details' player.id %}" class="btn btn-sm btn-primary rounded-pill px-2">
+                        <i class="fas fa-user-plus me-1"></i> Player Profile
+                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <p>No players found for your club.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'new_player' %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                        <i class="fas fa-user-plus me-1"></i> Add Player
+                    </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

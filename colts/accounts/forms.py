@@ -1,4 +1,6 @@
 from django import forms
+from django.db.models import Q
+
 from .models import CustomUser
 from app.models import Team, League, Player, LeagueMembership, Result, Season, Standings, Match
 
@@ -115,6 +117,20 @@ class AddResultForm(forms.ModelForm):
             "notes": forms.TextInput(attrs={"class": "form-control"}),
         }
 
+    def __init__(self, team=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        played_matches = Result.objects.values_list('match_id', flat=True)
+        queryset = Match.objects.exclude(id__in=played_matches)
+        if team:
+            queryset = queryset.filter(
+                Q(home_team=team) | Q(away_team=team)
+            )
+        if self.instance and self.instance.pk:
+            current_match_id = self.instance.match.id
+            queryset = Match.objects.filter(
+                Q(id__in=queryset) | Q(id=current_match_id)
+            )
+        self.fields['match'].queryset = queryset
 
 class AddPlayerForm(forms.ModelForm):
     class Meta:

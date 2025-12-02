@@ -1,93 +1,249 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
+
 {% block hero %}
+<div class="container-fluid px-4 py-4">
 
-    <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-0 text-uppercase">Welcome back, {{ user.username }}</h2>
+        </div>
+        <div>
+            <span class="badge shadow-sm     bg-light text-dark border p-2"><i class="fas fa-calendar-alt me-2"></i> {% now "F j, Y" %}</span>
+        </div>
+    </div>
 
-    <h1 class="text-left mb-2">Welcome Back, {{ user.username }}</h1>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">Seasons</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ seasons|length }} Seasons</h5>
-                        <a href="{% url 'new_season' %}" class="btn btn-light">New Season</a>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-primary border-0 border-start rounded-4 border-5 shadow-sm h-100 pb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase text-muted fw-semibold ls-1 mb-1" style="font-size: 0.75rem;">Total Seasons</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ seasons|length }}</h2>
+                    </div>
+                    <div class="icon-shape bg-primary bg-opacity-10 text-primary rounded-3 p-3">
+                        <i class="fas fa-trophy fa-2x"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 pt-0">
+                    <div class="d-grid gap-2 d-md-flex">
+                        <a href="{% url 'new_season' %}" class="btn btn-sm btn-outline-primary rounded-pill">
+                            <i class="fas fa-plus me-1"></i> New </a>
+                        <a href="{% url 'manage_seasons' %}" class="btn btn-sm btn-link text-decoration-none text-muted">Manage</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-header">Leagues</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ leagues|length }} Leagues</h5>
-                        <a href="{% url 'new_league' %}" class="btn btn-light">New League</a>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-success border-0 border-start rounded-4 border-5 border-0 shadow-sm h-100 pb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase text-muted fw-semibold ls-1 mb-1" style="font-size: 0.75rem;">Active Leagues</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ leagues|length }}</h2>
+                    </div>
+                    <div class="icon-shape bg-success bg-opacity-10 text-success rounded-3 p-3">
+                        <i class="fas fa-list-ul fa-2x"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 pt-0">
+                    <div class="d-grid gap-2 d-md-flex">
+                        <a href="{% url 'new_league' %}" class="btn btn-sm btn-outline-success rounded-pill">
+                            <i class="fas fa-plus me-1"></i> New
+                        </a>
+                        <a href="{% url 'manage_leagues' %}" class="btn btn-sm btn-link text-decoration-none text-muted">Manage</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-info mb-3">
-                    <div class="card-header">Teams</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ teams|length }} Teams</h5>
-                        <a href="{% url 'new_team' %}" class="btn btn-light">Add Team</a>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-info border-0 border-start rounded-4 border-5 border-0 shadow-sm h-100 pb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase text-muted fw-semibold ls-1 mb-1" style="font-size: 0.75rem;">Teams</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ teams|length }}</h2>
+                    </div>
+                    <div class="icon-shape bg-info bg-opacity-10 text-info rounded-3 p-3">
+                        <i class="fas fa-shield-alt fa-2x"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 pt-0">
+                    <div class="d-grid gap-2 d-md-flex">
+                        <a href="{% url 'new_team' %}" class="btn btn-sm btn-outline-info rounded-pill">
+                            <i class="fas fa-plus me-1"></i> New
+                        </a>
+                        <a href="{% url 'manage_teams' %}" class="btn btn-sm btn-link text-decoration-none text-muted">Manage</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="match-summary" class="container-fluid p-3">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header">Recent Matches</div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            {% for match in matches %}
-                                <li class="list-group-item">
-                                    {{ match.home_team.name }} vs {{ match.away_team.name }} - {{ match.date }}
-                                </li>
-                            {% empty %}
-                                <li class="list-group-item">No recent matches.</li>
-                            {% endfor %}
-                        </ul>
-                        <a href="#" class="btn btn-primary mt-3">View All Matches</a>
-                    </div>
+    <div class="row g-4">
+
+        <div class="col-lg-7">
+            <div class="card border-primary border-0 border-start border-5 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom border-light py-3">
+                    <h5 class="card-title mb-0 fw-bold text-dark text-uppercase">Matches</h5>
                 </div>
+                <div class="card-body bg-white rounded-bottom">
+                    <div id="match-summary-container" class="d-flex flex-column gap-3">
+                    {% for match in matches|slice:":4" %}
+    <div class="d-flex align-items-center bg-white border-bottom py-2 px-3 hover-bg-light transition-base">
+
+        <div class="d-flex flex-column align-items-center justify-content-center me-3" style="width: 50px; min-width: 50px;">
+            {% if match.date %}
+                <span class="fw-bold text-muted" style="font-size: 0.65rem;">{{ match.date|date:"d/m" }}</span>
+            {% else %}
+                <span class="fw-bold text-muted small">TBD</span>
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-grow-1 align-items-center justify-content-center">
+
+            <div class="d-flex align-items-center justify-content-end flex-fill" style="width: 40%;">
+            <a href="{% url 'team_details' match.home_team.id %}" class="text-decoration-none">
+                <span class="fw-bold text-dark small text-truncate me-2 d-none d-sm-block">{{ match.home_team.name }}</span>
+                <span class="fw-bold text-dark small text-truncate me-2 d-block d-sm-none" style="max-width: 60px;">{{ match.home_team.name }}</span>
+            </a>
+                {% if match.home_team.crest %}
+                    <img src="{{ match.home_team.crest.url }}" alt="{{ match.home_team.name }}" width="24" height="24" style="object-fit: contain;">
+                {% else %}
+                    <img src="{% static 'crest-placeholder.png' %}" alt="Home" width="24" height="24" style="object-fit: contain;">
+                {% endif %}
             </div>
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header">Club Admins</div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            {% for admin in club_admins %}
-                                <li class="list-group-item">{{ admin.username }} - {{ admin.email }} - {{ admin.club.name }} <a href="#" class="btn btn-sm btn-primary">Edit</a> <a href="#" class="btn btn-sm btn-danger">Delete</a></li>
-                            {% empty %}
-                                <li class="list-group-item">No club admins found.</li>
-                            {% endfor %}
-                        </ul>
-                        <a href="{% url 'add_new' %}" class="btn btn-primary mt-3">Add New Club Admin</a>
+
+            <div class="px-3 text-muted fw-bold small text-center" style="width: 40px;">
+                -
+            </div>
+
+            <div class="d-flex align-items-center justify-content-start flex-fill" style="width: 40%;">
+                {% if match.away_team.crest %}
+                    <img src="{{ match.away_team.crest.url }}" alt="{{ match.away_team.name }}" width="24" height="24" style="object-fit: contain;">
+                {% else %}
+                    <img src="{% static 'crest-placeholder.png' %}" alt="Away" width="24" height="24" style="object-fit: contain;">
+                {% endif %}
+
+            <a href="{% url 'team_details' match.away_team.id %}" class="text-decoration-none">
+                <span class="fw-bold text-dark small text-truncate ms-2 d-none d-sm-block">{{ match.away_team.name }}</span>
+                <span class="fw-bold text-dark small text-truncate ms-2 d-block d-sm-none" style="max-width: 60px;">{{ match.away_team.name }}</span>
+            </a>
+            </div>
+        </div>
+
+        <div class="d-none d-md-flex justify-content-end ms-3" style="width: 30px;">
+            <a href="{% url 'match_details' match.id %}" class="text-decoration-none">
+             <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.6rem;">View Match</span>
+                </a>
+        </div>
+
+    </div>
+                    {% endfor %}
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card border-success border-0 border-start border-5 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom border-light py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0 fw-bold text-dark">Club Admins</h5>
+                    <a href="{% url 'add_new' %}" class="btn btn-sm btn-success rounded-pill px-3">
+                        <i class="fas fa-user-plus me-1"></i> Add
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-muted small text-uppercase">
+                                <tr>
+                                    <th class="ps-4">User</th>
+                                    <th>Club</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for admin in club_admins %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-initials bg-light text-success rounded-circle me-2 d-flex justify-content-center align-items-center fw-bold" style="width: 32px; height: 32px;">
+                                                {{ admin.username|slice:":1"|upper }}
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark">{{ admin.username|capfirst }}</div>
+                                                <div class="small text-muted">{{ admin.email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill">
+                                            {{ admin.club.name }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group">
+                                            <a href="{% url 'edit_user' admin.id %}" class="btn btn-sm btn-light text-success" title="Edit">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+                                            <a href="{% url 'delete_user' admin.id %}" class="btn btn-sm btn-light text-danger" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-4 text-muted">
+                                        No club admins found.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
 
-{% block content %}
-{# Admin Full Profile View and Edit #}
-    <div id="admin-profile" class="container-fluid">
-        <div class="card">
-            <div class="card-header">My Account</div>
-            <div class="card-body">
-                <p><strong>Username:</strong> {{ user.username }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Role:</strong> {{ user.role }}</p>
-                <a href="#" class="btn btn-primary">Edit Profile</a>
-                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+</div>
+
+<div class="container-fluid px-4 pb-5">
+    <div class="card border-primary border-0 border-start rounded-4 border-5 border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center flex-wrap gap-4">
+                <div class="avatar-initials bg-light text-primary rounded-circle me-2 d-flex justify-content-center align-items-center fw-bold" style="width: 64px; height: 64px; font-size: 1.5rem">
+                                                {{ user.username|slice:":1"|upper }}
+                                            </div>
+
+                <div class="flex-grow-1">
+                    <h5 class="fw-bold mb-1">My Account</h5>
+                    <div class="text-muted small">
+                        <span class="me-3"><i class="fas fa-user me-1"></i> {{ user.username|capfirst }}</span>
+                        <span class="me-3"><i class="fas fa-envelope me-1"></i> {{ user.email }}</span>
+                        {% if user.role == "club_admin" %}
+                            <span class="me-3"><i class="fas fa-user-tag me-1"></i> Club Admin</span>
+                            {% if user.club %}
+                            <span class="me-3"><i class="fas fa-shield-alt me-1"></i> {{ user.club.name }}</span>
+                        {% endif %}
+                        {% else %}
+                            <span class="me-3"><i class="fas fa-user-tag me-1"></i> Admin</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="{% url 'edit_user' user.id %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-cog me-1"></i> Edit Profile
+                    </a>
+                    <a href="{% url 'logout' %}" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-
-
+</div>
 {% endblock %}

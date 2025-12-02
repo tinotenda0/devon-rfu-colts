@@ -1,14 +1,21 @@
 {% extends 'accounts/base.html' %}
-{% block hero %}
-    <div class="container-fluid">
-        <h1 class="text-left mb-2">Welcome Back, {{ user.username }}</h1>
-        <h2 class="text-left mb-4">Club: {{ club.name }}</h2>
+{% load static %}
+{% block content %}
+    <div class="container-fluid px-4 py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-0 text-uppercase">Welcome back, {{ user.username }}</h2>
+        </div>
+        <div>
+            <span class="badge bg-light text-dark border shadow-sm p-2"><i class="fas fa-calendar-alt me-2"></i> {% now "F j, Y" %}</span>
+        </div>
     </div>
     
     <div id="club-details" class="container-fluid mt-4">
-        <div class="card">
-            <div class="card-header">Club Details</div>
+        <div class=" card bg-white border-primary border-0 border-start border-5 shadow-sm h-100">
             <div class="card-body">
+            <h3 class="card-title text-uppercase fw-bold mb-4">{{ club.name }}</h3>
                 <div class="row">
                     <div class="col-md-3 text-center">
                         {% if club.crest %}
@@ -16,23 +23,28 @@
                         {% else %}
                             <img src="/static/crest-placeholder.png" alt="Default Crest" class="img-fluid mb-3" style="max-height: 150px;">
                         {% endif %}
-                        <p class="card-text"><strong>{{ club.name }}</strong></p>
+                        <p class="card-text text-uppercase text-muted fw-bold"><strong>{{ club.name }}</strong></p>
                     </div>
                     <div class="col-md-3">
-                        <p><strong>Bio:</strong> {{ club.team_bio }}</p>
+                        <p class="text-truncate"><strong>Bio:</strong> {{ club.team_bio }}</p>
                         <p><strong>Gender:</strong> {{ club.gender }}</p>
                         <p><strong>Age Group:</strong> {{ club.age_group }}</p>
-                        <button type="button" class="btn btn-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editClubModal">
-                            Edit Club Details
+                        <button type="button" class="btn btn-primary  btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editClubModal">
+                             <i class="fas fa-plus me-1"></i> Edit
                         </button>
+
 
                     </div>
                     <div class="col-md-6">
-                        <div class="card text-white bg-primary mb-3">
-                            <div class="card-header">Your Players</div>
+                        <div class="card text-white bg-primary mb-3 border-o shadow-sm">
+                            <div class="card-header fw-bold text-uppercase">Your Players</div>
                             <div class="card-body">
+                                {% if players|length < 2 %}
+                                <h5 class="card-title">{{ players|length }} Player</h5>
+                                {% else %}
                                 <h5 class="card-title">{{ players|length }} Players</h5>
-                                <a href="#" class="btn btn-light">View Players</a>
+                                {% endif %}
+                                <a href="{% url 'manage_players' %}" class="btn btn-light btn-sm text-uppercase fw-semibold">View Players</a>
                             </div>
                         </div>
                     </div>
@@ -101,50 +113,133 @@
     </div>
 </div>
 
-
-    <div id="match-summary" class="container-fluid mt-3">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-3">
-                    <div class="card-header">Recent Matches for {{ club.name }}</div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            {% for match in matches %}
-                                <li class="list-group-item">
-                                    {{ match.home_team.name }} vs {{ match.away_team.name }} - {{ match.date }}
-                                </li>
-                            {% empty %}
-                                <li class="list-group-item">No recent matches for your club.</li>
-                            {% endfor %}
-                        </ul>
-                        <a href="#" class="btn btn-primary mt-3">View All Club Matches</a>
-                    </div>
-                </div>
+    {# More detailed match center view with options to add results, new fixtures and edit fixtures and results #}
+    <div class="container-fluid mt-4">
+        <h3 class="mb-3 text-center fw-bold text-uppercase">Manage Matches</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-4 text-center">
+                <a href="{% url 'new_fixture' %}" class="btn btn-success border border-2 shadow-sm btn-lg mb-3 w-100">Add New Fixture</a>
+            </div>
+            <div class="col-md-4 text-center">
+                <a href="{% url 'new_result' %}" class="btn btn-info border border-2 shadow-sm btn-lg mb-3 w-100">Add New Result</a>
             </div>
         </div>
-    </div>
-{% endblock %}
 
-{% block content %}
-    {# auto standings #}
+        <div class="card bg-white shadow-sm border-primary border-0 border-start border-5 mt-4">
+            <div class="card-body rounded-bottom">
+            <h5 class="card-title text-uppercase fw-bold mb-4">{{ club.name }} Matches</h5>
+                    <div id="match-summary-container" class="d-flex flex-column gap-3">
+                    {% for match in matches|slice:":4" %}
+    <div class="d-flex align-items-center bg-white border-bottom py-2 px-3 hover-bg-light transition-base">
+
+        <div class="d-flex flex-column align-items-center justify-content-center me-3" style="width: 50px; min-width: 50px;">
+            {% if match.date %}
+                <span class="fw-bold text-muted" style="font-size: 0.65rem;">{{ match.date|date:"d/m" }}</span>
+            {% else %}
+                <span class="fw-bold text-muted small">TBD</span>
+            {% endif %}
+        </div>
+    <div class="d-none d-md-flex flex-column align-items-start justify-content-start me-3" style="width: 50px; min-width: 50px;">
+        {% if match.result.id %}
+            <span class="fw-bold badge border text-muted small">Match Played</span>
+            {% else %}
+            <span class="fw-bold badge border text-muted small">Fixture</span>
+            {% endif %}
+    </div>
+
+        <div class="d-flex flex-grow-1 align-items-center justify-content-center gap-1">
+
+            <div class="d-flex align-items-center justify-content-end flex-fill" style="width: 40%;">
+            <a href="{% url 'team_details' match.home_team.id %}" class="text-decoration-none">
+                <span class="fw-bold text-dark small text-truncate me-2 d-none d-sm-block">{{ match.home_team.name }}</span>
+                <span class="fw-bold text-dark small text-truncate me-2 mx-2 d-block d-sm-none" style="max-width: 60px;">{{ match.home_team.name }}</span>
+            </a>
+                {% if match.home_team.crest %}
+                    <img src="{{ match.home_team.crest.url }}" alt="{{ match.home_team.name }}" width="24" height="24" style="object-fit: contain;">
+                {% else %}
+                    <img src="{% static 'crest-placeholder.png' %}" alt="Home" width="24" height="24" style="object-fit: contain;">
+                {% endif %}
+            </div>
+
+            {% if match.result.id %}
+            <div class="d-flex  justify-content-around" style="width: fit-content; gap: 0.5rem;">
+                <span class="fw-bold text-primary">{{ match.result.home_score }}</span>
+                <span class="mx-1">-</span>
+                <span class="fw-bold text-primary">{{ match.result.away_score }}</span>
+            </div>
+            {% else %}
+            <div class="px-3 text-muted fw-bold small text-center" style="width: 40px;">
+                -
+            </div>
+            {% endif %}
+            <div class="d-flex align-items-center justify-content-start flex-fill" style="width: 40%;">
+                {% if match.away_team.crest %}
+                    <img src="{{ match.away_team.crest.url }}" alt="{{ match.away_team.name }}" width="24" height="24" style="object-fit: contain;">
+                {% else %}
+                    <img src="{% static 'crest-placeholder.png' %}" alt="Away" width="24" height="24" style="object-fit: contain;">
+                {% endif %}
+
+            <a href="{% url 'team_details' match.away_team.id %}" class="text-decoration-none">
+                <span class="fw-bold text-dark small text-truncate ms-2 d-none d-sm-block">{{ match.away_team.name }}</span>
+                <span class="fw-bold text-dark small text-truncate ms-2 d-block d-sm-none" style="max-width: 60px;">{{ match.away_team.name }}</span>
+            </a>
+            </div>
+        </div>
+
+        <div class="d-none d-md-flex justify-content-end ms-3" style="width: 30px;">
+            <a href="{% url 'match_details' match.id %}" class="text-decoration-none">
+             <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.6rem;">View Match</span>
+                </a>
+            {% if match.result.id %}
+            <a href="{% url 'edit_result' match.result.id %}" class="text-decoration-none">
+             <span class="badge bg-light text-secondary border fw-normal ms-1" style="font-size: 0.6rem;">Edit Result</span>
+                </a>
+            {% else %}
+            <a href="{% url 'new_result' match.id %}" class="text-decoration-none">
+             <span class="badge bg-light text-secondary border fw-normal ms-1" style="font-size: 0.6rem;">Add Result</span>
+                </a>
+            <a href="{% url 'edit_match' match.id %}" class="text-decoration-none">
+             <span class="badge bg-light text-secondary border fw-normal ms-1" style="font-size: 0.6rem;">Edit Fixture</span>
+                </a>
+            {% endif %}
+            <a href="{% url 'delete_match' match.id %}" class="text-decoration-none">
+             <span class="badge bg-danger text-white border fw-normal ms-1" style="font-size: 0.6rem;">Delete</span>
+                </a>
+        </div>
+
+    </div>
+                    {% endfor %}
+            </div>
+             <a href="{% url 'matches' %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm mt-3">View All Matches</a>
+        </div>
+    </div>
+    </div>
 
     <div id="all-players" class="container-fluid">
-    <div class="card mt-4">
-            <div class="card-header">All Players in {{ club.name }}</div>
+    <div class="card bg-white border-primary border-0 shadow-sm border-start border-5 mt-4">
             <div class="card-body">
-                <div class="row">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title text-uppercase fw-bold mb-0">Players</h5>
+                    <a href="{% url 'new_player' %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                        <i class="fas fa-user-plus me-1"></i> Add Player
+                    </a>
+                </div>
+
+                <div class="row justify-content-around">
                     {% for player in players %}
                         <div class="col-md-3 mb-3">
-                            <div class="card player-card h-100">
+                            <div class="card shadow-sm hover-card border-0 player-card h-100 justify-content-center align-items-center">
                                 {% if player.image %}
                                     <img src="{{ player.image.url }}" class="card-img-top" alt="{{ player.name }}" style="max-height: 200px; object-fit: cover;">
                                 {% else %}
                                     <img src="/static/player-placeholder.png" class="card-img-top" alt="Default Player Image" style="object-fit: cover;">
                                 {% endif %}
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ player.name }}</h5>
-                                    <p class="card-text">{{ player.position }}</p>
-                                    <a href="#" class="btn btn-sm btn-primary">View Profile</a>
+                                    <h5 class="card-title text-center fw-bold text-uppercase">{{ player.name }}</h5>
+                                    <p class="card-text text-center fw-semibold text-uppercase text-muted">{{ player.position }}</p>
+                                    <a href="{% url 'player_details' player.id %}" class="btn btn-sm btn-primary rounded-pill px-2">
+                        <i class="fas fa-user-plus me-1"></i> Player Profile
+                    </a>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +249,9 @@
                         </div>
                     {% endfor %}
                 </div>
-                <a href="{% url 'new_player' %}" class="btn btn-success mt-3">Add New Player</a>
+                <a href="{% url 'new_player' %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                        <i class="fas fa-user-plus me-1"></i> Add Player
+                    </a>
             </div>
         </div>
     </div>
@@ -166,7 +263,7 @@
 
     {# My account section for the club admin #}
     <div id="club-admin-account" class="container-fluid">
-        <div class="card">
+        <div class="border-primary border-0 border-start border-5 card">
             <div class="card-header">My Account</div>
             <div class="card-body">
                 <p><strong>Username:</strong> {{ user.username }}</p>

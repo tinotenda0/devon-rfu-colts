@@ -63,6 +63,9 @@
           <li class="nav-item">
             <a class="nav-link fw-bolder text-white" href="/about">ABOUT US</a>
           </li>
+        <li class="nav-item">
+            <a class="nav-link fw-bolder text-white" href="/matches">MATCHES</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link fw-bolder text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               LEAGUES
@@ -70,6 +73,17 @@
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               {% for league in all_leagues %}
                 <li><a class="dropdown-item" href="{% url 'league_details' league.id %}">{{ league.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link fw-bolder text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              SEASONS
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/seasons/archive">ARCHIVE</a></li>
+              {% for season in all_seasons %}
+                <li><a class="dropdown-item" href="{% url 'season_details' season.id %}">{{ season.year }}</a></li>
               {% endfor %}
             </ul>
           </li>

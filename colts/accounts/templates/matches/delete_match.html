@@ -1,0 +1,23 @@
+{% extends 'accounts/forms_base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Delete Match</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Are you sure you want to delete the match between <strong>{{ match.home_team.name }}</strong> and <strong>{{ match.away_team.name }}</strong> on <strong>{{ match.date }}</strong>?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger me-2">Delete</button>
+                        <a href="{% url 'club_admin_dash' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -72,13 +72,10 @@ def index_page_data(request):
 from django.utils import timezone
 from app.models import Match
 
-
-
 def index(request):
     context = {
         "all_leagues": League.objects.all(),
-        # "recent_matches": Result.objects.all(),
-        # "recent_matches": Match.objects.all().order_by('date')[:4],
+        "all_seasons": Season.objects.all(),
         "recent_matches": Result.objects.select_related('match').order_by('-match__date')[:4],
         "fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
     }
@@ -92,8 +89,7 @@ def table(request):
 def matches(request):
     context = {
         "all_leagues": League.objects.all(),
-        # "recent_matches": Result.objects.all(),
-        # "recent_matches": Match.objects.all().order_by('date')[:4],
+        "all_seasons": Season.objects.all(),
         "recent_matches": Result.objects.select_related('match').order_by('-match__date')[:4],
         "fixtures": Match.objects.filter(date__gte=timezone.now()).order_by('date')[:4],
     }
@@ -102,7 +98,8 @@ def matches(request):
 
 def about(request):
     all_leagues = League.objects.all()
-    return render(request, "about.html", {"all_leagues": all_leagues})
+    all_seasons = Season.objects.all()
+    return render(request, "about.html", {"all_leagues": all_leagues, "all_seasons": all_seasons})
 
 
 def auth(request):
@@ -110,4 +107,5 @@ def auth(request):
 
 def contact(request):
     all_leagues = League.objects.all()
-    return render(request, "contact.html", {"all_leagues": all_leagues})
+    all_seasons = Season.objects.all()
+    return render(request, "contact.html", {"all_leagues": all_leagues, "all_seasons": all_seasons})

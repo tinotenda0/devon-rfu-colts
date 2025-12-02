@@ -55,24 +55,6 @@ def register(request):
         form = CustomUserRegistrationForm()
     return render(request, "registration/register.html", {"form": form})
 
-
-@admin_required
-def dashboard(request):
-    seasons = Season.objects.all().order_by("-start_date")
-    leagues = League.objects.all()
-    teams = Team.objects.all()
-    club_admins = CustomUser.objects.filter(role="club_admin")
-    matches = Match.objects.all().order_by("-date")[:10]
-
-    context = {
-        "seasons": seasons,
-        "leagues": leagues,
-        "teams": teams,
-        "club_admins": club_admins,
-        "matches": matches,
-    }
-    return render(request, "accounts/dashboard.html", context)
-
 @admin_required
 def add_new(request):
     clubs = teams(request)
@@ -85,6 +67,26 @@ def add_new(request):
         form = ClubAdminCreationForm()
     return render(request, "accounts/add_new.html", {"form": form, "clubs": clubs})
 
+@admin_required
+def edit_user(request, user_id):
+    user_profile = get_object_or_404(CustomUser, pk=user_id)
+    if request.method == "POST":
+        form = ClubAdminCreationForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = ClubAdminCreationForm(instance=user_profile)
+    return render(request, "accounts/edit_user.html", {"form": form, "user_profile": user_profile})
+
+
+@admin_required
+def delete_user(request, user_id):
+    user_profile = get_object_or_404(CustomUser, pk=user_id)
+    if request.method == "POST":
+        user_profile.delete()
+        return redirect("dashboard")
+    return render(request, "accounts/delete_user.html", {"user_profile": user_profile})
 
 @club_admin_required
 def club_admin_dash(request):
@@ -119,16 +121,7 @@ def new_team(request):
             return redirect("index")
     else:
         form = AddTeamForm()
-    return render(request, "accounts/new_team.html", {"form": form})
-
-@club_admin_required
-def edit_team(request, team_id):
-    team = Team.objects.get(id=team_id, pk=request.user.club.pk)
-    if request.method == 'POST':
-        form = AddTeamForm(request.POST, request.FILES, instance=team)
-        if form.is_valid():
-            form.save()
-    return redirect('club_admin_dash')
+    return render(request, "teams/new_team.html", {"form": form})
 
 @club_admin_required
 def new_league(request):
@@ -139,9 +132,9 @@ def new_league(request):
             return redirect("index")
     else:
         form = AddLeagueForm()
-    return render(request, "accounts/new_league.html", {"form": form})
+    return render(request, "leagues/new_league.html", {"form": form})
 
-@club_admin_required
+@admin_required
 def new_season(request):
     if request.method == "POST":
         form = AddSeasonForm(request.POST)
@@ -150,30 +143,121 @@ def new_season(request):
             return redirect("index")
     else:
         form = AddSeasonForm()
-    return render(request, "accounts/new_season.html", {"form": form})
+    return render(request, "seasons/new_season.html", {"form": form})
+
+@admin_required
+def manage_seasons(request):
+    seasons = Season.objects.all()
+    return render(request, "seasons/manage_seasons.html", {"seasons": seasons})
+
+@admin_required
+def edit_season(request, season_id):
+    season = get_object_or_404(Season, pk=season_id)
+    if request.method == "POST":
+        form = AddSeasonForm(request.POST, instance=season)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = AddSeasonForm(instance=season)
+    return render(request, "seasons/new_season.html", {"form": form, "season": season})
+
+@admin_required
+def delete_season(request, season_id):
+    season = get_object_or_404(Season, pk=season_id)
+    if request.method == "POST":
+        season.delete()
+        return redirect("index")
+    return render(request, "seasons/delete_season.html", {"season": season})
+
+@admin_required
+def archive_season(request, season_id):
+    season = get_object_or_404(Season, pk=season_id)
+    if request.method == "POST":
+        season.archived_status = not season.archived_status
+        season.save()
+        return redirect("manage_seasons")
+    return render(request, "seasons/archive_season.html", {"season": season})
+
 
 @club_admin_required
 def new_fixture(request):
+    team = request.user.club
+    if not team:
+        return redirect('club_admin_dash')
     if request.method == "POST":
         form = AddFixtureForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("index")
+            fixture = form.save(commit=False)
+            fixture.home_team = team
+            fixture.save()
+            return redirect("club_admin_dash")
     else:
-        form = AddFixtureForm()
-    return render(request, "accounts/new_fixture.html", {"form": form})
+        form = AddFixtureForm(initial={'home_team': team})
+    return render(request, "matches/new_fixture.html", {"form": form})
 
 @club_admin_required
-def new_result(request):
+def new_result(request, team_id=None):
+    team = request.user.club
+    if not team:
+        return redirect('club_admin_dash')
+
+    if team_id:
+        # If team_id is provided, it means we are adding a result for a specific match
+        # where the current user's team is either home or away.
+        # The form should be pre-filled with this match.
+        match = get_object_or_404(Match, pk=team_id)
+        if request.method == "POST":
+            form = AddResultForm(team=team, data=request.POST)
+            if form.is_valid():
+                result = form.save(commit=False)
+                result.match = match
+                result.save()
+                return redirect("club_admin_dash")
+        else:
+            form = AddResultForm(team=team, initial={'match': match})
+    else:
+        if request.method == "POST":
+            form = AddResultForm(team=team, data=request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect("club_admin_dash")
+        else:
+            form = AddResultForm(team=team)
+    return render(request, "matches/new_result.html", {"form": form})
+
+@club_admin_required
+def edit_match(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
     if request.method == "POST":
-        form = AddResultForm(request.POST)
+        form = AddFixtureForm(request.POST, instance=match)
         if form.is_valid():
             form.save()
-            return redirect("index")
+            return redirect("club_admin_dash")
     else:
-        form = AddResultForm()
-    return render(request, "accounts/new_result.html", {"form": form})
+        form = AddFixtureForm(instance=match)
+    return render(request, "matches/new_fixture.html", {"form": form, "match": match})
 
+@club_admin_required
+def edit_result(request, result_id):
+    result = get_object_or_404(Result, pk=result_id)
+    if request.method == "POST":
+        form = AddResultForm(request.POST, instance=result)
+        if form.is_valid():
+            form.save()
+            return redirect("club_admin_dash")
+    else:
+        form = AddResultForm(instance=result)
+    return render(request, "matches/new_result.html", {"form": form, "result": result})
+
+
+@club_admin_required
+def delete_match(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if request.method == "POST":
+        match.delete()
+        return redirect("club_admin_dash")
+    return render(request, "matches/delete_match.html", {"match": match})
 
 @club_admin_required
 def new_player(request):
@@ -186,7 +270,82 @@ def new_player(request):
             return redirect("club_admin_dash")
     else:
         form = AddPlayerForm(user=request.user)
-    return render(request, "accounts/new_player.html", {"form": form})
+    return render(request, "players/new_player.html", {"form": form})
+
+@admin_required
+def manage_leagues(request):
+    leagues = League.objects.all()
+    return render(request, "leagues/manage_leagues.html", {"leagues": leagues})
+
+@admin_required
+def edit_league(request, league_id):
+    league = get_object_or_404(League, pk=league_id)
+    if request.method == "POST":
+        form = AddLeagueForm(request.POST, instance=league)
+        if form.is_valid():
+            form.save()
+            return redirect("manage_leagues")
+    else:
+        form = AddLeagueForm(instance=league)
+    return render(request, "leagues/new_league.html", {"form": form, "league": league})
+
+@club_admin_required
+def edit_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    if request.method == "POST":
+        form = AddTeamForm(request.POST, request.FILES, instance=team)
+        if form.is_valid():
+            form.save()
+            return redirect("manage_teams")
+    else:
+        form = AddTeamForm(instance=team)
+    return render(request, "teams/new_team.html", {"form": form, "team": team})
+
+@admin_required
+def delete_league(request, league_id):
+    league = get_object_or_404(League, pk=league_id)
+    if request.method == "POST":
+        league.delete()
+        return redirect("manage_leagues")
+    return render(request, "leagues/delete_league.html", {"league": league})
+@admin_required
+def manage_teams(request):
+    teams = Team.objects.all()
+    return render(request, "teams/manage_teams.html", {"teams": teams})
+
+@admin_required
+def delete_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    if request.method == "POST":
+        team.delete()
+        return redirect("manage_teams")
+    return render(request, "teams/delete_team.html", {"team": team})
+
+@admin_required
+def manage_players(request):
+    team = request.user.club
+    players = Player.objects.filter(team=team)
+    return render(request, "players/manage_players.html", {"players": players, "club": team})
+
+@club_admin_required
+def edit_player(request, player_id):
+    player = get_object_or_404(Player, pk=player_id)
+    if request.method == "POST":
+        form = AddPlayerForm(request.POST, instance=player)
+        if form.is_valid():
+            form.save()
+            return redirect("manage_players")
+    else:
+        form = AddPlayerForm(instance=player)
+    return render(request, "players/new_player.html", {"form": form, "player": player})
+
+@club_admin_required
+def delete_player(request, player_id):
+    player = get_object_or_404(Player, pk=player_id)
+    if request.method == "POST":
+        player.delete()
+        return redirect("manage_players")
+    return render(request, "players/delete_player.html", {"player": player})
 
 #automatic standings per league
 def calculate_standings(league):
@@ -304,6 +463,8 @@ def league_details(request, league_id):
         'fixtures': fixtures,
         'recent_matches': recent_matches,
         'standings': standings,
+        "all_leagues": League.objects.all(),
+        "all_seasons": Season.objects.all(),
     }
     return render(request, 'leagues/league_details.html', context)
 
@@ -324,6 +485,8 @@ def team_details(request, team_id):
         'recent_matches': results,
         'fixtures': fixtures,
         'results': results,
+        "all_leagues": League.objects.all(),
+        "all_seasons": Season.objects.all(),
     }
     return render(request, 'teams/team_details.html', context)
 
@@ -331,6 +494,8 @@ def player_details(request, player_id):
     player = get_object_or_404(Player, pk=player_id)
     context = {
         'player': player,
+        "all_leagues": League.objects.all(),
+        "all_seasons": Season.objects.all(),
     }
     return render(request, 'players/player_details.html', context)
 
@@ -341,6 +506,8 @@ def match_details(request, match_id):
     context = {
         'match': match,
         'result': result,
+        "all_leagues": League.objects.all(),
+        "all_seasons": Season.objects.all(),
     }
     return render(request, 'matches/match_details.html', context)
 
@@ -353,6 +520,8 @@ def season_details(request, season_id):
         'season': season,
         'leagues': leagues,
         'recent_matches': matches,
+        "all_leagues": League.objects.all(),
+        "all_seasons": Season.objects.all(),
     }
     return render(request, 'seasons/season_details.html', context)
 
@@ -360,6 +529,8 @@ def archive(request):
     seasons = Season.objects.all().order_by('-year')
     context = {
         'seasons': seasons,
+        "all_leagues": League.objects.all(),
+        "all_seasons": Season.objects.all(),
     }
     return render(request, 'seasons/archive.html', context)
 

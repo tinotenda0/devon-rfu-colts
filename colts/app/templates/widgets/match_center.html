@@ -125,7 +125,7 @@
                         <!-- Footer -->
                         <div class="card-footer d-flex flex-row bg-light border-0 px-4 py-3 justify-content-between">
                             <div class="text-muted small align-self-center">
-                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ result.venue|default:"Home Ground" }}
+                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ result.match.venue|default:"Home Ground" }}
                             </div>
                             <div class="text-muted small">
                             <a href="{% url 'match_details' result.match.id %}" class="btn btn-primary rounded-pill px-5 fw-bolder shadow-sm">View Details</a>

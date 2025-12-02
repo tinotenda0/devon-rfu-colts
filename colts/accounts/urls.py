@@ -1,5 +1,13 @@
 from django.urls import path
-from .views import register, index, add_new, dashboard, club_admin_dash, new_team, edit_team, new_league, new_season, new_fixture, new_player, new_result
+from .views import (register, index, add_new, club_admin_dash,
+                    new_team, edit_team, new_league, new_season, new_fixture,
+                    new_player, new_result, manage_leagues, edit_league,
+                    delete_league, manage_teams, delete_team, manage_players,
+                    edit_player, delete_player, league_details, team_details,
+                    player_details, match_details, season_details, archive,
+                    manage_seasons, edit_season, delete_season, delete_user,
+                    edit_user, archive_season, edit_match, delete_match,
+                    edit_result)
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
@@ -12,13 +20,37 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(next_page="index"), name="logout"),
     path("register/", register, name="register"),
     path("add_new/", add_new, name="add_new"),
-    path("dashboard/", dashboard, name="dashboard"),
+    path("edit_user/<int:user_id>/", edit_user, name="edit_user"),
+    path("delete_user/<int:user_id>/", delete_user, name="delete_user"),
     path("dash/", club_admin_dash, name="club_admin_dash"),
     path("edit_team/", edit_team, name="edit_team"),
+    path("edit_team/<int:team_id>/", edit_team, name="edit_team"),
     path("new_team/", new_team, name="new_team"),
     path("new_league/", new_league, name="new_league"),
     path("new_season/", new_season, name="new_season"),
     path("new_fixture/", new_fixture, name="new_fixture"),
     path("new_player/", new_player, name="new_player"),
     path("new_result/", new_result, name="new_result"),
+    path("new_result/<int:team_id>/", new_result, name="new_result"),
+    path("manage_seasons/", manage_seasons, name="manage_seasons"),
+    path("edit_season/<int:season_id>/", edit_season, name="edit_season"),
+    path("delete_season/<int:season_id>/", delete_season, name="delete_season"),
+    path("archive_season/<int:season_id>/", archive_season, name="archive_season"),
+    path("manage_leagues/", manage_leagues, name="manage_leagues"),
+    path("edit_league/<int:league_id>/", edit_league, name="edit_league"),
+    path("delete_league/<int:league_id>/", delete_league, name="delete_league"),
+    path("manage_teams/", manage_teams, name="manage_teams"),
+    path("delete_team/<int:team_id>/", delete_team, name="delete_team"),
+    path("manage_players/", manage_players, name="manage_players"),
+    path("edit_player/<int:player_id>/", edit_player, name="edit_player"),
+    path("delete_player/<int:player_id>/", delete_player, name="delete_player"),
+    path("league_details/<int:league_id>/", league_details, name="league_details"),
+    path("team_details/<int:team_id>/", team_details, name="team_details"),
+    path("player_details/<int:player_id>/", player_details, name="player_details"),
+    path("match_details/<int:match_id>/", match_details, name="match_details"),
+    path("edit_match/<int:match_id>/", edit_match, name="edit_match"),
+    path("edit_result/<int:result_id>/", edit_result, name="edit_result"),
+    path("delete_match/<int:match_id>/", delete_match, name="delete_match"),
+    path("season_details/<int:season_id>/", season_details, name="season_details"),
+    path("archive/", archive, name="archive")
 ]
