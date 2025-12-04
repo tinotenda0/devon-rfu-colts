@@ -97,6 +97,16 @@ class AddFixtureForm(forms.ModelForm):
             'away_team': forms.Select(attrs={'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'initial' in kwargs and 'home_team' in kwargs['initial']:
+            team = kwargs['initial']['home_team']
+            self.fields['league'].queryset = League.objects.filter(leaguemembership__team=team)
+            self.fields['season'].queryset = Season.objects.filter(archived_status=False)
+        else:
+            self.fields['home_team'].queryset = Team.objects.all()
+            self.fields['away_team'].queryset = Team.objects.all()
+
 class AddResultForm(forms.ModelForm):
     class Meta:
         model = Result
@@ -155,3 +165,16 @@ class AddPlayerForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class JoinLeagueForm(forms.Form):
+    league = forms.ModelChoiceField(queryset=League.objects.all(), empty_label="Select a League", widget=forms.Select(attrs={'class': 'form-control'}))
+    team = forms.ModelChoiceField(queryset=Team.objects.all(), empty_label="Select your Team", widget=forms.Select(attrs={'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user and user.club:
+            self.fields['team'].queryset = Team.objects.filter(id=user.club.id)
+            self.fields['team'].initial = user.club
+            self.fields['team'].widget.attrs['readonly'] = True
+            self.fields['team'].widget.attrs['disabled'] = True

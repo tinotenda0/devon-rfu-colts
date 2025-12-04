@@ -29,13 +29,13 @@
                         <p class="text-truncate"><strong>Bio:</strong> {{ club.team_bio }}</p>
                         <p><strong>Gender:</strong> {{ club.gender }}</p>
                         <p><strong>Age Group:</strong> {{ club.age_group }}</p>
-                        <button type="button" class="btn btn-primary  btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editClubModal">
+                        <button type="button" class="btn btn-primary  btn-sm mt-3 mb-3" data-bs-toggle="modal" data-bs-target="#editClubModal">
                              <i class="fas fa-plus me-1"></i> Edit
                         </button>
 
 
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3 text-center">
                         <div class="card text-white bg-primary mb-3 border-o shadow-sm">
                             <div class="card-header fw-bold text-uppercase">Your Players</div>
                             <div class="card-body">
@@ -45,9 +45,25 @@
                                 <h5 class="card-title">{{ players|length }} Players</h5>
                                 {% endif %}
                                 <a href="{% url 'manage_players' %}" class="btn btn-light btn-sm text-uppercase fw-semibold">View Players</a>
+
                             </div>
                         </div>
                     </div>
+                <div class="col-md-3 text-center">
+                        <div class="card text-white bg-info mb-3 border-o shadow-sm">
+                            <div class="card-header fw-bold text-uppercase">Your Leagues</div>
+                            <div class="card-body">
+                                {% if club.leaguemembership_set.all|length < 2 %}
+                                <h5 class="card-title">{{ club.leaguemembership_set.all|length }} League</h5>
+                                {% else %}
+                                <h5 class="card-title">{{ club.leaguemembership_set.all|length }} Leagues</h5>
+                                {% endif %}
+                                <a href="{% url 'my_leagues' %}" class="btn btn-light btn-sm text-uppercase fw-semibold">View Leagues</a>
+                                <a href="{% url 'join_league' %}" class="btn btn-light btn-sm text-uppercase fw-semibold">Join League</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -151,8 +167,7 @@
 
             <div class="d-flex align-items-center justify-content-end flex-fill" style="width: 40%;">
             <a href="{% url 'team_details' match.home_team.id %}" class="text-decoration-none">
-                <span class="fw-bold text-dark small text-truncate me-2 d-none d-sm-block">{{ match.home_team.name }}</span>
-                <span class="fw-bold text-dark small text-truncate me-2 mx-2 d-block d-sm-none" style="max-width: 60px;">{{ match.home_team.name }}</span>
+                <span class="fw-bold text-dark small text-truncate me-2 d-none d-sm-block">{{ match.home_team.name|slice:15 }}</span>
             </a>
                 {% if match.home_team.crest %}
                     <img src="{{ match.home_team.crest.url }}" alt="{{ match.home_team.name }}" width="24" height="24" style="object-fit: contain;">
@@ -181,7 +196,6 @@
 
             <a href="{% url 'team_details' match.away_team.id %}" class="text-decoration-none">
                 <span class="fw-bold text-dark small text-truncate ms-2 d-none d-sm-block">{{ match.away_team.name }}</span>
-                <span class="fw-bold text-dark small text-truncate ms-2 d-block d-sm-none" style="max-width: 60px;">{{ match.away_team.name }}</span>
             </a>
             </div>
         </div>
@@ -226,7 +240,7 @@
                 </div>
 
                 <div class="row justify-content-around">
-                    {% for player in players %}
+                    {% for player in players|slice:":4" %}
                         <div class="col-md-3 mb-3">
                             <div class="card shadow-sm hover-card border-0 player-card h-100 justify-content-center align-items-center">
                                 {% if player.image %}
@@ -249,11 +263,15 @@
                         </div>
                     {% endfor %}
                 </div>
-                <a href="{% url 'new_player' %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                <a href="{% url 'new_player' %}" class="btn btn-sm btn-primary rounded-pill px-3 mx-3">
                         <i class="fas fa-user-plus me-1"></i> Add Player
+                    </a>
+            <a href="{% url 'manage_players' %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                        <i class="fas fa-user me-1"></i> View All
                     </a>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 
