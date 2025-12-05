@@ -399,9 +399,8 @@ def delete_player(request, player_id):
         return redirect("manage_players")
     return render(request, "players/delete_player.html", {"player": player})
 
-#automatic standings per league
-def calculate_standings(league, season):  # 1. Pass season as an argument
-    # 2. Filter teams based on membership in THIS league for THIS season
+
+def calculate_standings(league, season):
     teams = Team.objects.filter(
         leaguemembership__league=league,
         leaguemembership__season=season
@@ -424,44 +423,33 @@ def calculate_standings(league, season):  # 1. Pass season as an argument
             'total_points': 0,
         }
 
-    # 3. Filter matches for THIS league and THIS season
     matches = Match.objects.filter(
         league=league,
         season=season
     )
 
     for match in matches:
-        # Use select_related/prefetch_related optimization if possible here
-        # But keeping it simple for now:
         result = Result.objects.filter(match=match).first()
 
         if result:
             home_team = match.home_team
             away_team = match.away_team
 
-            # Safety check: Ensure teams are actually in the initialized standings dict
-            # (Prevents errors if a team played a match but was removed from membership)
             if home_team in standings and away_team in standings:
 
-                # --- Update Stats (Logic remains the same) ---
-
-                # Played
                 standings[home_team]['played'] += 1
                 standings[away_team]['played'] += 1
 
-                # Points
                 standings[home_team]['points_for'] += result.home_score
                 standings[home_team]['points_against'] += result.away_score
                 standings[away_team]['points_for'] += result.away_score
                 standings[away_team]['points_against'] += result.home_score
 
-                # Tries
                 standings[home_team]['tries_for'] += result.home_tries
                 standings[home_team]['tries_against'] += result.away_tries
                 standings[away_team]['tries_for'] += result.away_tries
                 standings[away_team]['tries_against'] += result.home_tries
 
-                # W/D/L
                 if result.home_score > result.away_score:
                     standings[home_team]['wins'] += 1
                     standings[home_team]['total_points'] += 4
@@ -476,8 +464,6 @@ def calculate_standings(league, season):  # 1. Pass season as an argument
                     standings[away_team]['draws'] += 1
                     standings[away_team]['total_points'] += 2
 
-                # Bonus Points
-                # 4 Try Bonus
                 if result.home_tries >= 4:
                     standings[home_team]['bonus_points'] += 1
                     standings[home_team]['total_points'] += 1
@@ -485,7 +471,6 @@ def calculate_standings(league, season):  # 1. Pass season as an argument
                     standings[away_team]['bonus_points'] += 1
                     standings[away_team]['total_points'] += 1
 
-                # Losing Bonus (within 7)
                 if result.away_score < result.home_score and result.away_score >= result.home_score - 7:
                     standings[away_team]['bonus_points'] += 1
                     standings[away_team]['total_points'] += 1
@@ -493,69 +478,49 @@ def calculate_standings(league, season):  # 1. Pass season as an argument
                     standings[home_team]['bonus_points'] += 1
                     standings[home_team]['total_points'] += 1
 
-    # Calculate PD
     for team_standing in standings.values():
         team_standing['point_difference'] = team_standing['points_for'] - team_standing['points_against']
 
-    # Convert to list
     standings_list = []
     for team, data in standings.items():
         standings_list.append({
             'team': team,
-            **data  # Unpack the dictionary to keep code clean
+            **data
         })
 
-    # Sort: Points -> PD -> Points For
     standings_list.sort(key=lambda x: (x['total_points'], x['point_difference'], x['points_for']), reverse=True)
 
     return standings_list
 
-# Detailed frontend league view with teams, matches, players and all stats
 def league_details(request, league_id, season_id=None):
     league = get_object_or_404(League, pk=league_id)
-
-    # --- Step 1: Determine the Season ---
     if season_id:
-        # User requested a specific season
         current_season = get_object_or_404(Season, pk=season_id)
     else:
-        # User didn't specify, find the latest active season
-        # We order by end_date desc to get the most recent one
         current_season = Season.objects.filter(archived_status=False).order_by('-end_date').first()
-
-    # --- Step 2: Filter Queries by this Season ---
-
-    # Only get teams that are members in THIS season
     teams_in_league = Team.objects.filter(
         leaguemembership__league=league,
         leaguemembership__season=current_season
     )
-
-    # Filter fixtures by league AND season
     fixtures = Match.objects.filter(
         league=league,
         season=current_season,
         date__gte=timezone.now()
     ).order_by('date')
-
-    # Filter results by league AND season
     recent_matches = Result.objects.filter(
         match__league=league,
         match__season=current_season
     ).order_by('-match__date')[:5]
-
-    # Calculate standings using the specific season
     standings = calculate_standings(league, current_season)
 
     context = {
         'league': league,
-        'current_season': current_season,  # Pass this so template knows what we are looking at
+        'current_season': current_season,
         'teams_in_league': teams_in_league,
         'fixtures': fixtures,
         'recent_matches': recent_matches,
         'standings': standings,
         "all_leagues": League.objects.all(),
-        # Pass all seasons so you can create a dropdown to switch history
         "all_seasons": Season.objects.all().order_by('-year'),
     }
     return render(request, 'leagues/league_details.html', context)
