@@ -1,14 +1,20 @@
 The goal of this project is to provide accurate, up-to-date, and easily accessible information for the Devon RFU Colts league. It's meant to replace a manual tracking with a centralized system that automatically updates standings based on submitted results.
 
+### Stacks
+
+*   **Backend:** [e.g., Python Django]
+*   **Frontend:** [e.g., Bootstrap / HTML5]
+*   **Database:** [e.g., PostgreSQL / SQLite]
+
 ### Target Audience
 *   **Public:** Players, Coaches, Parents, and Supporters.
 *   **Administration:** Club Administrators (reporting scores) and Devon RFU Officials (monitoring the league).
 
 ---
 
-## ✨ Core Features
+## Core Features
 
-### 🏉 Public Interface
+### Public Interface
 *   **Fixtures Hub:**
     *   Homepage display of next 5–10 upcoming fixtures.
     *   Filterable list by Date, League, or Team.
