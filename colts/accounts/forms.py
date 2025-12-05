@@ -26,6 +26,7 @@ class ClubAdminCreationForm(forms.ModelForm):
         return user
 
 class AddTeamForm(forms.ModelForm):
+    # Field definitions remain the same...
     crest_upload = forms.ImageField(
         label="Or upload a crest",
         required=False,
@@ -47,15 +48,21 @@ class AddTeamForm(forms.ModelForm):
         crest_url = cleaned_data.get('crest')
         crest_upload = cleaned_data.get('crest_upload')
 
+        # Logic: It's okay to have NEITHER if we are editing and already have an image.
+        # But we still shouldn't allow BOTH new inputs at the same time.
         if crest_url and crest_upload:
             raise forms.ValidationError("Please provide a URL or upload an image, not both.", code='invalid')
 
         return cleaned_data
 
     def save(self, commit=True):
+        # 1. Create the instance but don't save to DB yet
         instance = super().save(commit=False)
+
+        # 2. Handle File Upload
+        # FIX: Assign the file object directly, not .url
         if self.cleaned_data.get('crest_upload'):
-            instance.crest = self.cleaned_data['crest_upload'].url
+            instance.crest = self.cleaned_data['crest_upload']
         if commit:
             instance.save()
         return instance
@@ -176,5 +183,5 @@ class JoinLeagueForm(forms.Form):
         if user and user.club:
             self.fields['team'].queryset = Team.objects.filter(id=user.club.id)
             self.fields['team'].initial = user.club
-            self.fields['team'].widget.attrs['readonly'] = True
-            self.fields['team'].widget.attrs['disabled'] = True
+            # self.fields['team'].widget.attrs['readonly'] = True
+            # self.fields['team'].widget.attrs['disabled'] = True

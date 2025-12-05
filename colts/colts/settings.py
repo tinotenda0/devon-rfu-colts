@@ -134,6 +134,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files (User-uploaded content)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/#serving-files-uploaded-by-a-user-during-development
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 

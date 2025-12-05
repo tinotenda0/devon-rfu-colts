@@ -5,10 +5,14 @@ from .forms import (CustomUserRegistrationForm, ClubAdminCreationForm,
                     AddTeamForm, AddLeagueForm, AddSeasonForm,
                     AddFixtureForm, AddPlayerForm, AddResultForm,
                     JoinLeagueForm)
-from django.contrib.auth import login
+from django.contrib.auth import login,logout
 from accounts.decorators import admin_required, club_admin_required
 from app.models import Season, League, Team, Match, Result, Player, LeagueMembership
 from accounts.models import CustomUser
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 
 def teams(request):
     try:
@@ -32,10 +36,12 @@ def join_league(request):
         if form.is_valid():
             league = form.cleaned_data['league']
             team = form.cleaned_data['team']
-            LeagueMembership.objects.create(team=team, league=league)
+            LeagueMembership.objects.create(team=team, league=league, season=league.season)
             return redirect("club_admin_dash")
     else:
         form = JoinLeagueForm(user=request.user)
+
+
     return render(request, "leagues/join_league.html", {"form": form})
 
 def my_leagues(request):
@@ -79,7 +85,7 @@ def index(request):
     #         return redirect("club_admin_dash")
     return render(request, "accounts/index.html", context)
 
-
+@admin_required
 def register(request):
     if request.method == "POST":
         form = CustomUserRegistrationForm(request.POST)
@@ -123,7 +129,7 @@ def delete_user(request, user_id):
     user_profile = get_object_or_404(CustomUser, pk=user_id)
     if request.method == "POST":
         user_profile.delete()
-        return redirect("dashboard")
+        return redirect("index")
     return render(request, "accounts/delete_user.html", {"user_profile": user_profile})
 
 @club_admin_required
@@ -166,7 +172,7 @@ def new_team(request):
         form = AddTeamForm()
     return render(request, "teams/new_team.html", {"form": form})
 
-@club_admin_required
+@admin_required
 def new_league(request):
     if request.method == "POST":
         form = AddLeagueForm(request.POST)
@@ -334,15 +340,18 @@ def edit_league(request, league_id):
 
 @club_admin_required
 def edit_team(request, team_id):
-    team = get_object_or_404(Team, pk=team_id)
-    if request.method == "POST":
+
+    team = get_object_or_404(Team, id=team_id)
+
+    if request.method == 'POST':
         form = AddTeamForm(request.POST, request.FILES, instance=team)
         if form.is_valid():
             form.save()
-            return redirect("manage_teams")
+            return redirect('team_details', team.id)
     else:
         form = AddTeamForm(instance=team)
-    return render(request, "teams/new_team.html", {"form": form, "team": team})
+
+    return render(request, 'teams/add_team.html', {'form': form, 'team': team})
 
 @admin_required
 def delete_league(request, league_id):

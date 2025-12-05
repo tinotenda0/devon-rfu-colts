@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (register, index, add_new, club_admin_dash,
+from .views import (register, logout_view, index, add_new, club_admin_dash,
                     new_team, edit_team, new_league, new_season, new_fixture,
                     new_player, new_result, manage_leagues, edit_league,
                     delete_league, manage_teams, delete_team, manage_players,
@@ -8,16 +8,12 @@ from .views import (register, index, add_new, club_admin_dash,
                     manage_seasons, edit_season, delete_season, delete_user,
                     edit_user, archive_season, edit_match, delete_match,
                     edit_result, leagues, join_league, my_leagues)
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path("", index, name="index"),
-    path(
-        "login/",
-        LoginView.as_view(template_name="registration/login.html"),
-        name="login",
-    ),
-    path("logout/", LogoutView.as_view(next_page="index"), name="logout"),
+    path("login/",LoginView.as_view(template_name="registration/login.html"),name="login"),
+    path("logout/", logout_view, name="logout"),
     path("register/", register, name="register"),
     path("add_new/", add_new, name="add_new"),
     path("edit_user/<int:user_id>/", edit_user, name="edit_user"),
