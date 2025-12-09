@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "colts/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "colts/wsgi.py"
+    }
+  ]
+}
