@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (register, index, add_new, club_admin_dash,
+from .views import (register, logout_view, index, add_new, club_admin_dash,
                     new_team, edit_team, new_league, new_season, new_fixture,
                     new_player, new_result, manage_leagues, edit_league,
                     delete_league, manage_teams, delete_team, manage_players,
@@ -7,17 +7,13 @@ from .views import (register, index, add_new, club_admin_dash,
                     player_details, match_details, season_details, archive,
                     manage_seasons, edit_season, delete_season, delete_user,
                     edit_user, archive_season, edit_match, delete_match,
-                    edit_result)
-from django.contrib.auth.views import LoginView, LogoutView
+                    edit_result, leagues, join_league, my_leagues)
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path("", index, name="index"),
-    path(
-        "login/",
-        LoginView.as_view(template_name="registration/login.html"),
-        name="login",
-    ),
-    path("logout/", LogoutView.as_view(next_page="index"), name="logout"),
+    path("login/",LoginView.as_view(template_name="registration/login.html"),name="login"),
+    path("logout/", logout_view, name="logout"),
     path("register/", register, name="register"),
     path("add_new/", add_new, name="add_new"),
     path("edit_user/<int:user_id>/", edit_user, name="edit_user"),
@@ -45,6 +41,9 @@ urlpatterns = [
     path("edit_player/<int:player_id>/", edit_player, name="edit_player"),
     path("delete_player/<int:player_id>/", delete_player, name="delete_player"),
     path("league_details/<int:league_id>/", league_details, name="league_details"),
+    path("leagues/", leagues, name="leagues"),
+    path("join_league/", join_league, name="join_league"),
+    path("my_leagues/", my_leagues, name="my_leagues"),
     path("team_details/<int:team_id>/", team_details, name="team_details"),
     path("player_details/<int:player_id>/", player_details, name="player_details"),
     path("match_details/<int:match_id>/", match_details, name="match_details"),

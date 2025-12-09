@@ -1,11 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .forms import CustomUserRegistrationForm, ClubAdminCreationForm, AddTeamForm, AddLeagueForm, AddSeasonForm, AddFixtureForm, AddPlayerForm, AddResultForm
-from django.contrib.auth import login
+from .forms import (CustomUserRegistrationForm, ClubAdminCreationForm,
+                    AddTeamForm, AddLeagueForm, AddSeasonForm,
+                    AddFixtureForm, AddPlayerForm, AddResultForm,
+                    JoinLeagueForm)
+from django.contrib.auth import login,logout
 from accounts.decorators import admin_required, club_admin_required
-from app.models import Season, League, Team, Match, Result, Player
+from app.models import Season, League, Team, Match, Result, Player, LeagueMembership
 from accounts.models import CustomUser
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 
 def teams(request):
     try:
@@ -14,6 +21,43 @@ def teams(request):
         print(f"Error fetching teams: {e}")
         teams = []
     return teams
+
+def leagues(request):
+    try:
+        all_leagues = League.objects.all()
+    except Exception as e:
+        print(f"Error fetching leagues: {e}")
+        all_leagues = []
+    return render(request, "leagues/leagues.html", {"all_leagues": all_leagues})
+
+def join_league(request):
+    if request.method == "POST":
+        form = JoinLeagueForm(request.POST, user=request.user)
+        if form.is_valid():
+            league = form.cleaned_data['league']
+            team = form.cleaned_data['team']
+            LeagueMembership.objects.create(team=team, league=league, season=league.season)
+            return redirect("club_admin_dash")
+    else:
+        form = JoinLeagueForm(user=request.user)
+
+
+    return render(request, "leagues/join_league.html", {"form": form})
+
+def my_leagues(request):
+    team = request.user.club
+    if not team:
+        return redirect('club_admin_dash')
+
+    memberships = LeagueMembership.objects.filter(team=team)
+    leagues = [membership.league for membership in memberships]
+
+    context = {
+        "leagues": leagues,
+        "club": team,
+    }
+    return render(request, "leagues/my_leagues.html", context)
+
 
 def users(request):
     try:
@@ -41,7 +85,7 @@ def index(request):
     #         return redirect("club_admin_dash")
     return render(request, "accounts/index.html", context)
 
-
+@admin_required
 def register(request):
     if request.method == "POST":
         form = CustomUserRegistrationForm(request.POST)
@@ -85,12 +129,16 @@ def delete_user(request, user_id):
     user_profile = get_object_or_404(CustomUser, pk=user_id)
     if request.method == "POST":
         user_profile.delete()
-        return redirect("dashboard")
+        return redirect("index")
     return render(request, "accounts/delete_user.html", {"user_profile": user_profile})
 
 @club_admin_required
 def club_admin_dash(request):
     team = request.user.club
+    club_leagues = LeagueMembership.objects.filter(team=team)
+    club_leagues = [membership.league for membership in club_leagues]
+    if not team:
+        return redirect('club_admin_dash')
     if request.method == 'POST':
         form = AddTeamForm(request.POST, request.FILES, instance=team)
         if form.is_valid():
@@ -109,6 +157,7 @@ def club_admin_dash(request):
         "players": players,
         "matches": matches,
         "form": form,
+        "leagues": club_leagues,
     }
     return render(request, "accounts/club_admin_dash.html", context)
 
@@ -123,7 +172,7 @@ def new_team(request):
         form = AddTeamForm()
     return render(request, "teams/new_team.html", {"form": form})
 
-@club_admin_required
+@admin_required
 def new_league(request):
     if request.method == "POST":
         form = AddLeagueForm(request.POST)
@@ -147,7 +196,7 @@ def new_season(request):
 
 @admin_required
 def manage_seasons(request):
-    seasons = Season.objects.all()
+    seasons = Season.objects.filter(archived_status=False)
     return render(request, "seasons/manage_seasons.html", {"seasons": seasons})
 
 @admin_required
@@ -291,15 +340,18 @@ def edit_league(request, league_id):
 
 @club_admin_required
 def edit_team(request, team_id):
-    team = get_object_or_404(Team, pk=team_id)
-    if request.method == "POST":
+
+    team = get_object_or_404(Team, id=team_id)
+
+    if request.method == 'POST':
         form = AddTeamForm(request.POST, request.FILES, instance=team)
         if form.is_valid():
             form.save()
-            return redirect("manage_teams")
+            return redirect('team_details', team.id)
     else:
         form = AddTeamForm(instance=team)
-    return render(request, "teams/new_team.html", {"form": form, "team": team})
+
+    return render(request, 'teams/add_team.html', {'form': form, 'team': team})
 
 @admin_required
 def delete_league(request, league_id):
@@ -347,9 +399,13 @@ def delete_player(request, player_id):
         return redirect("manage_players")
     return render(request, "players/delete_player.html", {"player": player})
 
-#automatic standings per league
-def calculate_standings(league):
-    teams = Team.objects.filter(leaguemembership__league=league)
+
+def calculate_standings(league, season):
+    teams = Team.objects.filter(
+        leaguemembership__league=league,
+        leaguemembership__season=season
+    )
+
     standings = {}
 
     for team in teams:
@@ -367,104 +423,105 @@ def calculate_standings(league):
             'total_points': 0,
         }
 
-    matches = Match.objects.filter(league=league)
+    matches = Match.objects.filter(
+        league=league,
+        season=season
+    )
 
     for match in matches:
-        home_team = match.home_team
-        away_team = match.away_team
         result = Result.objects.filter(match=match).first()
 
         if result:
-            # Update played count
-            standings[home_team]['played'] += 1
-            standings[away_team]['played'] += 1
+            home_team = match.home_team
+            away_team = match.away_team
 
-            # Update points for/against
-            standings[home_team]['points_for'] += result.home_score
-            standings[home_team]['points_against'] += result.away_score
-            standings[away_team]['points_for'] += result.away_score
-            standings[away_team]['points_against'] += result.home_score
+            if home_team in standings and away_team in standings:
 
-            # Update tries for/against
-            standings[home_team]['tries_for'] += result.home_tries
-            standings[home_team]['tries_against'] += result.away_tries
-            standings[away_team]['tries_for'] += result.away_tries
-            standings[away_team]['tries_against'] += result.home_tries
+                standings[home_team]['played'] += 1
+                standings[away_team]['played'] += 1
 
-            # Determine win/loss/draw and allocate points
-            if result.home_score > result.away_score:
-                standings[home_team]['wins'] += 1
-                standings[home_team]['total_points'] += 4  # Win points
-                standings[away_team]['losses'] += 1
-            elif result.away_score> result.home_score:
-                standings[away_team]['wins'] += 1
-                standings[away_team]['total_points'] += 4  # Win points
-                standings[home_team]['losses'] += 1
-            else:
-                standings[home_team]['draws'] += 1
-                standings[home_team]['total_points'] += 2  # Draw points
-                standings[away_team]['draws'] += 1
-                standings[away_team]['total_points'] += 2  # Draw points
+                standings[home_team]['points_for'] += result.home_score
+                standings[home_team]['points_against'] += result.away_score
+                standings[away_team]['points_for'] += result.away_score
+                standings[away_team]['points_against'] += result.home_score
 
-            # Bonus points (example: try bonus, losing bonus)
-            if result.home_tries >= 4:
-                standings[home_team]['bonus_points'] += 1
-                standings[home_team]['total_points'] += 1
-            if result.away_score >= result.home_score - 7 and result.away_score < result.home_score:
-                standings[away_team]['bonus_points'] += 1
-                standings[away_team]['total_points'] += 1
+                standings[home_team]['tries_for'] += result.home_tries
+                standings[home_team]['tries_against'] += result.away_tries
+                standings[away_team]['tries_for'] += result.away_tries
+                standings[away_team]['tries_against'] += result.home_tries
 
-            if result.away_tries >= 4:
-                standings[away_team]['bonus_points'] += 1
-                standings[away_team]['total_points'] += 1
-            if result.home_score >= result.away_score - 7 and result.home_score < result.away_score:
-                standings[home_team]['bonus_points'] += 1
-                standings[home_team]['total_points'] += 1
+                if result.home_score > result.away_score:
+                    standings[home_team]['wins'] += 1
+                    standings[home_team]['total_points'] += 4
+                    standings[away_team]['losses'] += 1
+                elif result.away_score > result.home_score:
+                    standings[away_team]['wins'] += 1
+                    standings[away_team]['total_points'] += 4
+                    standings[home_team]['losses'] += 1
+                else:
+                    standings[home_team]['draws'] += 1
+                    standings[home_team]['total_points'] += 2
+                    standings[away_team]['draws'] += 1
+                    standings[away_team]['total_points'] += 2
 
-    # Calculate point difference
+                if result.home_tries >= 4:
+                    standings[home_team]['bonus_points'] += 1
+                    standings[home_team]['total_points'] += 1
+                if result.away_tries >= 4:
+                    standings[away_team]['bonus_points'] += 1
+                    standings[away_team]['total_points'] += 1
+
+                if result.away_score < result.home_score and result.away_score >= result.home_score - 7:
+                    standings[away_team]['bonus_points'] += 1
+                    standings[away_team]['total_points'] += 1
+                if result.home_score < result.away_score and result.home_score >= result.away_score - 7:
+                    standings[home_team]['bonus_points'] += 1
+                    standings[home_team]['total_points'] += 1
+
     for team_standing in standings.values():
         team_standing['point_difference'] = team_standing['points_for'] - team_standing['points_against']
 
-    # Convert to a list of dictionaries for easier sorting and template rendering
     standings_list = []
     for team, data in standings.items():
         standings_list.append({
             'team': team,
-            'played': data['played'],
-            'wins': data['wins'],
-            'draws': data['draws'],
-            'losses': data['losses'],
-            'points_for': data['points_for'],
-            'points_against': data['points_against'],
-            'point_difference': data['point_difference'],
-            'tries_for': data['tries_for'],
-            'tries_against': data['tries_against'],
-            'bonus_points': data['bonus_points'],
-            'total_points': data['total_points'],
+            **data
         })
 
-    # Sort standings: total points, then point difference, then points for
     standings_list.sort(key=lambda x: (x['total_points'], x['point_difference'], x['points_for']), reverse=True)
 
     return standings_list
 
-# Detailed frontend league view with teams, matches, players and all stats
-def league_details(request, league_id):
+def league_details(request, league_id, season_id=None):
     league = get_object_or_404(League, pk=league_id)
-    teams_in_league = Team.objects.filter(leaguemembership__league=league)
-    fixtures = Match.objects.filter(league=league, date__gte=timezone.now()).order_by('date')
-    recent_matches = Result.objects.filter(match__league=league).order_by('-match__date')[:5]
-
-    standings = calculate_standings(league)
+    if season_id:
+        current_season = get_object_or_404(Season, pk=season_id)
+    else:
+        current_season = Season.objects.filter(archived_status=False).order_by('-end_date').first()
+    teams_in_league = Team.objects.filter(
+        leaguemembership__league=league,
+        leaguemembership__season=current_season
+    )
+    fixtures = Match.objects.filter(
+        league=league,
+        season=current_season,
+        date__gte=timezone.now()
+    ).order_by('date')
+    recent_matches = Result.objects.filter(
+        match__league=league,
+        match__season=current_season
+    ).order_by('-match__date')[:5]
+    standings = calculate_standings(league, current_season)
 
     context = {
         'league': league,
+        'current_season': current_season,
         'teams_in_league': teams_in_league,
         'fixtures': fixtures,
         'recent_matches': recent_matches,
         'standings': standings,
         "all_leagues": League.objects.all(),
-        "all_seasons": Season.objects.all(),
+        "all_seasons": Season.objects.all().order_by('-year'),
     }
     return render(request, 'leagues/league_details.html', context)
 
@@ -486,7 +543,7 @@ def team_details(request, team_id):
         'fixtures': fixtures,
         'results': results,
         "all_leagues": League.objects.all(),
-        "all_seasons": Season.objects.all(),
+        "all_seasons": Season.objects.filter(archived_status=False),
     }
     return render(request, 'teams/team_details.html', context)
 
@@ -495,7 +552,7 @@ def player_details(request, player_id):
     context = {
         'player': player,
         "all_leagues": League.objects.all(),
-        "all_seasons": Season.objects.all(),
+        "all_seasons": Season.objects.filter(archived_status=False),
     }
     return render(request, 'players/player_details.html', context)
 
@@ -507,7 +564,7 @@ def match_details(request, match_id):
         'match': match,
         'result': result,
         "all_leagues": League.objects.all(),
-        "all_seasons": Season.objects.all(),
+        "all_seasons": Season.objects.filter(archived_status=False),
     }
     return render(request, 'matches/match_details.html', context)
 
@@ -521,7 +578,7 @@ def season_details(request, season_id):
         'leagues': leagues,
         'recent_matches': matches,
         "all_leagues": League.objects.all(),
-        "all_seasons": Season.objects.all(),
+        "all_seasons": Season.objects.filter(archived_status=False),
     }
     return render(request, 'seasons/season_details.html', context)
 
@@ -530,7 +587,7 @@ def archive(request):
     context = {
         'seasons': seasons,
         "all_leagues": League.objects.all(),
-        "all_seasons": Season.objects.all(),
+        "all_seasons": Season.objects.filter(archived_status=False),
     }
     return render(request, 'seasons/archive.html', context)
 
