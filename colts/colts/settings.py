@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -62,7 +63,7 @@ CACHES = {
 }
 
 LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login"
 
 
 ROOT_URLCONF = "colts.urls"
@@ -89,17 +90,7 @@ WSGI_APPLICATION = "colts.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres.otmkozrlupeqrvvrvkpt",
-        "PASSWORD": "EFN64dWadO9DjIHe",
-        "HOST": "aws-1-eu-west-1.pooler.supabase.com",
-        "PORT": "5432",
-        "OPTIONS": {
-            "sslmode": "require",
-        },
-    }
+    "default": dj_database_url.config(default=DATABASE_URL),
 }
 
 # Password validation
@@ -139,10 +130,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "/static/"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+
 
 # Media files (User-uploaded content)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/#serving-files-uploaded-by-a-user-during-development
