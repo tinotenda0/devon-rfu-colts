@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -29,9 +28,16 @@ DATABASE_URL = os.getenv("SUPABASE_DB_URL")
 SECRET_KEY = "django-insecure-e486vsdsvl-)!do+n3!^2&o4irw6#ymb^#_46_^ucoydp#rl()"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# You can control this via environment: DEBUG=true / false
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1", ".onrender.com", ".tinotenda.co"]
+ALLOWED_HOSTS = [
+    ".vercel.app",
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+    ".tinotenda.co",
+]
 
 # Application definition
 
@@ -48,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -131,13 +138,21 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+# Where collectstatic dumps everything (Render log shows this path)
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Tell Django to use WhiteNoise’s compressed manifest storage for static files
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
+}
+
+# No STATICFILES_DIRS needed – app/static is picked up automatically
 
 
 # Media files (User-uploaded content)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/#serving-files-uploaded-by-a-user-during-development
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
