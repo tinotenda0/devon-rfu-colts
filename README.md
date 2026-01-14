@@ -2,9 +2,9 @@ The goal of this project is to provide accurate, up-to-date, and easily accessib
 
 ### Stacks
 
-*   **Backend:** [e.g., Python Django]
-*   **Frontend:** [e.g., Bootstrap / HTML5]
-*   **Database:** [e.g., PostgreSQL / SQLite]
+*   **Backend:** - Python Django
+*   **Frontend:** - Bootstrap and HTML5
+*   **Database:** - PostgreSQL
 
 ### Target Audience
 *   **Public:** Players, Coaches, Parents, and Supporters.
