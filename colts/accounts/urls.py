@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import (register, logout_view, index, add_new, club_admin_dash,
                     new_team, edit_team, new_league, new_season, new_fixture,
                     new_player, new_result, manage_leagues, edit_league,

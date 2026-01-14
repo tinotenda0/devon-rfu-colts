@@ -43,6 +43,16 @@
                                     The official administration portal for Devon RFU Colts. Manage
                                     teams, players, fixtures, and more.
                                 </p>
+
+                                {% if not user.is_authenticated %}
+                                <div class="mt-4">
+                                    <p class="small mb-0"><strong>Demo Login Details:</strong></p>
+                                    <p class="small mb-0"><strong>Admin:</strong> username: <code>superadmin</code>, password: <code>Secure123</code></p>
+                                    <p class="small mb-0"><strong>Club Admin:</strong> username: <code>admin</code>, password: <code>Secure123</code></p>
+                                </div>
+                                {% endif %}
+
+
                             </div>
                         </div>
                         <div class="col-lg-6">
