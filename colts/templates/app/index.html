@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+{% load static %}
+{% block title %}Home - Colts{% endblock %}
+{% block content %}
+<!-- {% block hero %}The Heart of Rugby in Devon<br><a href="#about-section" class="btn btn-dark">ABOUT US</a>{% endblock %} -->
+{% include "widgets/match_center.html" %}
+
+{% include "widgets/sponsors.html" %}
+
+<section id="about-section" class="about-section">
+    <h3 class="text-center fw-bolder text-uppercase mb-4">About Us</h3>
+      <div class="container d-flex align-items-center">
+        <div class="about-card">
+          <div class="align-items-center">
+            <img src="{% static 'logo.svg' %}" alt="devon-rfu-logo" class="align-items-center">
+          </div>
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta, cupiditate deserunt a velit, voluptatum veniam
+          laudantium error neque beatae, laborum maiores sunt quae id ipsa aliquam vero ducimus! Consequatur et ab obcaecati
+          nemo nesciunt aperiam rerum, nisi iste ipsum placeat repellat sunt laudantium aut minus ex officiis possimus nam,
+          harum dicta maxime libero! Deserunt hic quisquam reprehenderit animi totam, quas quaerat incidunt eius quasi nulla
+          dolorum sint voluptate illo? Sequi cupiditate modi obcaecati? Natus, cumque. <br>Totam, doloribus omnis possimus
+          consequatur iste tempore fugit eos expedita quisquam rem praesentium velit, quae deserunt blanditiis perspiciatis in
+          architecto quo magni qui. Aut est quis animi, provident quaerat dolores nostrum omnis voluptates doloribus minima
+          exercitationem cum nisi quam dignissimos quibusdam earum at repellendus alias vitae debitis ipsum? Obcaecati
+          laboriosam molestiae eius rerum quo consectetur alias debitis a impedit nostrum, sequi sunt inventore repudiandae
+          magnam fugit libero maiores vero unde porro labore reprehenderit? <br> Quod culpa deserunt voluptas qui commodi laborum
+          eveniet sint sunt. Voluptate doloremque voluptates at ullam. Ipsa consectetur corrupti possimus nam, vitae quod libero
+          eaque itaque repudiandae illo culpa optio cum molestias ab, temporibus architecto, repellendus omnis! Sint quia ipsa
+          quod vero, quae quaerat natus saepe, accusamus ipsum praesentium iusto assumenda? Voluptate quos quod aspernatur,
+          cupiditate beatae aliquam ullam? Labore placeat tempore non! Debitis numquam, exercitationem ipsa iure quae error qui
+          necessitatibus quaerat perspiciatis delectus doloremque, minima sunt fuga eveniet vero laudantium distinctio
+          voluptatem pariatur tempora? Accusantium, est explicabo. <br> Corrupti fugiat est at ducimus ipsum, quo beatae sit nemo
+          voluptatum, autem dicta aliquam a id nobis. Quidem itaque mollitia esse possimus officia quam impedit, quibusdam
+          aliquid? Incidunt modi tenetur numquam excepturi mollitia ab odio perferendis ut qui ex sit consequuntur deleniti
+          neque, reprehenderit cum eos, ad sunt culpa ducimus voluptate molestiae accusamus. Est numquam modi architecto, odio a
+          quam magnam delectus laudantium natus.</p>
+      </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ player.name }} Details{% endblock %}
+
+{% block hero %}
+    {{ player.name }}
+{% endblock %}
+
+{% block img %}
+
+{{ team.crest.url }}
+
+{% endblock %}
+
+{% block team %}
+    <a href="{% url 'team_details' player.team.id %}">{{ player.team.name }}</a>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card hover-card mb-4 rounded-4">
+        <div class="card-header text-center">
+            {% if player.image %}
+                <img src="{{ player.image.url }}" alt="{{ player.name }}" class="img-fluid rounded-circle" style="max-height: 200px; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'player-placeholder.png' %}" alt="Default Player Image" class="img-fluid rounded-circle" style="max-height: 200px; object-fit: cover;">
+            {% endif %}
+            <h1 class="mt-3 fw-bold">{{ player.name }}</h1>
+            <h5 class="text-muted  fw-bold">{{ player.position }}</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Team:</strong> <a href="{% url 'team_details' player.team.id %}">{{ player.team.name }}</a></p>
+            <p><strong>Date of Birth:</strong> {{ player.date_of_birth }}</p>
+            <p><strong>Bio:</strong> {{ player.player_bio|default:"No bio available." }}</p>
+            <p><strong>Privacy Consent:</strong>
+                {% if player.privacy_consent %}
+                    <span class="badge bg-success">Given</span>
+                {% else %}
+                    <span class="badge bg-danger">Not Given</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'team_details' player.team.id %}" class="btn btn-primary">Back to Team</a>
+    </div>
+</div>
+{% endblock %}

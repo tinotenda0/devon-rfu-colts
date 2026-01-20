@@ -1,0 +1,16 @@
+/* Give docs a Devon RFU Colts accent colour */
+.wiki-article h1,
+.wiki-article h2 {
+  color: #006400; /* dark green */
+}
+
+/* Tweak navbar look */
+.navbar-inverse {
+  background-color: #004b23;
+  border-color: #003016;
+}
+
+.navbar-inverse .navbar-brand,
+.navbar-inverse .navbar-nav > li > a {
+  color: #ffffff;
+}

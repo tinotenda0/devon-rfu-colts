@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Match Details{% endblock %}
+
+{% block hero %}
+    Match Details
+{% endblock %}
+
+{% block content %}
+    <div class="row g-4 justify-content-center mt-5">
+            <div class="col-lg-6 col-md-12">
+                <div class="d-flex align-items-center mb-4">
+                    <h2 class="fw-bold mb-0 text-uppercase hover-text">{{ match.home_team.name }} vs {{ match.away_team.name }}</h2>
+                </div>
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4 hover-card">
+                        <!-- Header -->
+                        <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pt-4 pb-0">
+                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2 text-uppercase fw-bolder" style="font-size: 0.7rem;">{{ match.league.name|default:"Premiership" }}</span>
+                            <span class="text-muted small fw-bolder"><i class="far fa-calendar me-2"></i>{{ match.date|date:"D, d M" }}</span>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body px-4 py-4">
+                            <div class="row align-items-center text-center">
+                            {% if result %}
+                                <div class="col-4">
+                                {% if match.home_team.crest %}
+                                        <img src="{{ match.home_team.crest.url }}" alt="{{ match.home_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Home Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                <a href="{% url 'team_details' match.home_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ match.home_team.name }}</h6></a>
+                                </div>
+                            {% else %}
+                                <!-- Home Team -->
+                                <div class="col-4">
+                                    {% if match.home_team.crest %}
+                                        <img src="{{ match.home_team.crest.url }}" alt="{{ match.home_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Home Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                <a href="{% url 'team_details' match.home_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ match.home_team.name }}</h6></a>
+                                </div>
+                            {% endif %}
+
+                                <!-- Center Info -->
+                            {% if result %}
+                                <div class="col-4">
+                                    <div class="bg-white rounded-3 py-2 px-1 mb-2 border border-secondary">
+                                        <div class="h2 fw-bolder text-success mb-0" style="letter-spacing: -1px;">{{ result.home_score }} - {{ result.away_score }}</div>
+                                    </div>
+                                </div>
+
+                            {% else %}
+                                <div class="col-4">
+                                    <div class="h2 fw-bolder text-success mb-1">VS</div>
+                                    {% if match.date %}
+                                        <div class="text-success small fw-bolder">
+                                            <i class="fas fa-calendar me-1"></i>{{ match.date|date}}<br>
+                                            <i class="fas fa-clock me-1"></i>{{ match.date|timeuntil }} to go
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
+                                <!-- Away Team -->
+                            {% if result %}
+                                <div class="col-4">
+                                    {% if result.match.away_team.crest %}
+                                        <img src="{{ result.match.away_team.crest.url }}" alt="{{ result.match.away_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Away Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                    <a href="{% url 'team_details' result.match.away_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ result.match.away_team.name }}</h6></a>
+                                </div>
+                            {% else %}
+                                <div class="col-4">
+                                    {% if match.away_team.crest %}
+                                        <img src="{{ match.away_team.crest.url }}" alt="{{ match.away_team.name }}" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% else %}
+                                        <img src="{% static 'crest-placeholder.png' %}" alt="Away Crest" class="img-fluid mb-2" style="max-height: 70px; width: auto; object-fit: contain;">
+                                    {% endif %}
+                                <a href="{% url 'team_details' match.away_team.id %}" class="text-decoration-none"><h6 class="fw-bold text-dark hover-text text-truncate text-uppercase">{{ match.away_team.name }}</h6></a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if result %}
+                            <div class="row text-center mt-3">
+                                <div class="col-6">
+                                    <p class="fw-bold mb-0">Tries: {{ result.home_tries }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="fw-bold mb-0">Tries: {{ result.away_tries }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+            {% else %}
+                <p class="text-center">Match not yet played, please check back after {{ match.date }} at {{ match.time }}</p>
+            {% endif %}
+
+                        <!-- Footer -->
+                        <div class="card-footer d-flex flex-row bg-light border-0 px-4 py-3 justify-content-between">
+                            <div class="text-muted small align-self-center">
+                                <i class="fas fa-map-marker-alt text-success me-2"></i>{{ match.venue|default:"Home Ground" }}
+                            </div>
+                            <a href="javascript:history.back()" class="btn btn-success rounded-pill px-5 fw-bolder shadow-sm">Back</a>
+                        </div>
+                    </div>
+            </div>
+    </div>
+{% endblock %}

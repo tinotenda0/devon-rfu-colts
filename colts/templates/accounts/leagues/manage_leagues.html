@@ -1,0 +1,53 @@
+{% extends 'accounts/base.html' %}
+{% block hero %}
+    <div class="container-fluid px-4 py-3">
+        <h2 class="fw-bold text-dark text-uppercase mb-2">Manage Leagues</h2>
+    </div>
+    <div class="container-fluid mt-4 px-4 mb-4">
+        <div class="card bg-white shadow-sm border-success border-0 border-start border-5">
+            <div class="card-header bg-white fw-bold text-uppercase">
+                All Leagues
+            </div>
+
+            <div class="card-body">
+
+                <a href="{% url 'new_league' %}"
+                   class="btn btn-success shadow-sm mb-3 fw-semibold text-uppercase">
+                    <i class="fas fa-plus me-1"></i> Add New League
+                </a>
+
+                <ul class="list-group list-group-flush">
+
+                    {% for league in leagues %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+
+                            <div class="me-3">
+                                <h5 class="fw-bold text-uppercase mb-1">{{ league.name }}</h5>
+                                <p class="mb-1 text-muted small">
+                                    {{ league.gender }} - {{ league.age_group }} ({{ league.season.year }})
+                                </p>
+                                <small class="text-muted">{{ league.notes }}</small>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <a href="{% url 'edit_league' league.id %}"
+                                   class="btn btn-sm btn-success shadow-sm text-uppercase fw-semibold px-3">
+                                    Edit
+                                </a>
+
+                                <a href="{% url 'delete_league' league.id %}"
+                                   class="btn btn-sm btn-danger shadow-sm text-uppercase fw-semibold px-3">
+                                    Delete
+                                </a>
+                            </div>
+
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item py-3 text-muted">No leagues found.</li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Season Archive{% endblock %}
+
+{% block hero %}
+    Season Archive
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4 fw-bold text-uppercase hover-text text-center">Season Archive</h1>
+
+    {% if seasons %}
+        <div class="row align-center justify-content-center">
+            {% for season in seasons %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden hover-card h-100 text-center">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-bolder text-uppercase hover-text">{{ season.year }}</h5>
+                            <hr>
+                            <p class="card-text text-muted fw-bold">{{ season.start_date }} - {{ season.end_date }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'season_details' season.id %}" class="btn btn-sm text-uppercase fw-bolder btn-outline-primary">View Season Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No past seasons found.</p>
+    {% endif %}
+</div>
+{% endblock %}

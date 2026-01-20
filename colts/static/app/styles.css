@@ -1,0 +1,277 @@
+@font-face {
+  .poppins-light {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .poppins-medium {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  .poppins-semibold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  .poppins-bold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .poppins-extrabold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  .poppins-black {
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+  }
+
+  .poppins-regular-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .poppins-medium-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  .poppins-semibold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .poppins-bold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  .poppins-extrabold-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: italic;
+  }
+
+  .poppins-black-italic {
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    font-style: italic;
+  }
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.socials {
+  font-size: 200px;
+  color: #fff;
+}
+
+.spacer {
+  height: 3rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+:root {
+  --colts-green: #0ea64a;
+  --dark-bg: #000000;
+}
+
+.top-bar {
+  background: var(--colts-green);
+  color: #071;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.top-bar a {
+  color: #052b12;
+  text-decoration: none;
+}
+
+.main-nav {
+  background: transparent;
+}
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.hero {
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  color: white;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.15);
+  position: absolute;
+  inset: 0;
+}
+.hero-left {
+  z-index: 2;
+  max-width: 640px;
+  padding-left: 3rem;
+}
+.hero-title {
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 0.9;
+  font-size: 6.25rem;
+}
+@media (max-width: 900px) {
+  .hero-title {
+    font-size: 3.2rem;
+  }
+  .hero-left {
+    padding: 1.5rem;
+  }
+}
+
+.matches-fixture {
+  margin-top: -1.5rem;
+}
+.side-left {
+  background: var(--colts-green);
+  color: rgb(0, 0, 0);
+}
+.side-right {
+  background: var(--dark-bg);
+  color: #fff;
+}
+
+.center-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-match,
+.card-fixture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  height: fit-content;
+  width: 320px; /* Set a fixed width for uniformity */
+  padding: 1rem;
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 800;
+  color: var(--colts-green);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.08);
+  overflow: hidden; /* Ensures content doesn't overflow */
+  text-overflow: ellipsis; /* Shows ... for overflowed text */
+  white-space: nowrap; /* Prevents line breaks */
+}
+
+.card-match > *,
+.card-fixture > * {
+  min-width: 0; /* Allows children to shrink properly */
+}
+
+.fixture-list .card-fixture {
+  color: #0b0b0b;
+}
+
+.sponsors-strip {
+  padding: 2rem 0;
+}
+.sponsors-strip img {
+  max-height: 54px;
+  margin: 0 14px;
+  object-fit: contain;
+}
+
+.about-section {
+  background: var(--colts-green);
+  padding: 3.5rem 0;
+}
+
+.about-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.my-container {
+  width: 100%;
+}
+
+.header {
+  background-image: url("/static/hero1.png");
+clip: rect(500px,0px,0px,0px);
+background-repeat: no-repeat;
+background-size: cover;
+min-height: 75%;
+min-width: 100%;
+background-position: top;
+margin: 0;
+box-shadow: 0px 4px 10px black;
+}
+
+.hover-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important;
+        }
+
+        /* Responsive Crest Sizing */
+        .team-crest {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 576px) {
+            .team-crest { width: 60px; height: 60px; }
+            .score-text { font-size: 2rem !important; }
+        }
+
+.hover-text {
+            transition: color 0.3s ease;
+        }
+        .hover-text:hover {
+            color: var(--colts-green) !important;
+        }

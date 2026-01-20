@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ league.name }} Standings{% endblock %}
+
+{% block hero %}
+    {{ league.name }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bolder mb-0 text-uppercase hover-text">{{ league.name }}</h1>
+        <h3 class="text-muted fw-light">Season: {{ current_season.year }}</h3>
+    </div>
+
+    <div class="d-flex justify-content-end mb-3">
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle rounded-pill px-4 shadow-sm" type="button" id="seasonDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-calendar-alt me-2"></i>Change Season
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4" aria-labelledby="seasonDropdown">
+                {% for season in all_seasons %}
+                    <li>
+                        <a class="dropdown-item {% if season.id == current_season.id %}active fw-bold{% endif %}"
+                           href="{% url 'league_details' season.id league.id %}">
+                           {{ season.year }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% if standings %}
+        <div class="card hover-card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4 py-3 text-uppercase text-muted small fw-bolder border-0">Team</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0" title="Played">P</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-sm-table-cell" title="Wins">W</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-sm-table-cell" title="Draws">D</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-sm-table-cell" title="Losses">L</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-lg-table-cell" title="Points For">PF</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-lg-table-cell" title="Points Against">PA</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-sm-table-cell" title="Point Difference">PD</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-lg-table-cell" title="Tries For">TF</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-lg-table-cell" title="Tries Against">TA</th>
+                            <th class="text-center py-3 text-uppercase text-muted small fw-bolder border-0 d-none d-md-table-cell" title="Bonus Points">BP</th>
+                            <th class="text-center px-4 py-3 text-uppercase text-primary small fw-bolder border-0" title="Points">Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for team_standing in standings %}
+                            <tr>
+                                <td class="px-4 border-light">
+                                    <div class="d-flex align-items-center">
+                                        {% if team_standing.team.crest %}
+                                            <img src="{{ team_standing.team.crest.url }}" alt="{{ team_standing.team.name }}" class="rounded-circle me-3" style="width: 32px; height: 32px; object-fit: contain;">
+                                        {% else %}
+                                            <img src="{% static 'crest-placeholder.png' %}" alt="Crest" class="rounded-circle me-3" style="width: 32px; height: 32px; object-fit: contain;">
+                                        {% endif %}
+                                        <a href="{% url 'team_details' team_standing.team.id %}" class="text-decoration-none"><span class="fw-bolder text-dark hover-text">{{ team_standing.team.name }}</span></a>
+                                    </div>
+                                </td>
+                                <td class="text-center fw-bolder text-secondary border-light">{{ team_standing.played }}</td>
+                                <td class="text-center text-secondary border-light d-none d-sm-table-cell">{{ team_standing.wins }}</td>
+                                <td class="text-center text-muted border-light d-none d-sm-table-cell">{{ team_standing.draws }}</td>
+                                <td class="text-center text-muted border-light d-none d-sm-table-cell">{{ team_standing.losses }}</td>
+
+                                <td class="text-center text-muted small border-light d-none d-lg-table-cell">{{ team_standing.points_for }}</td>
+                                <td class="text-center text-muted small border-light d-none d-lg-table-cell">{{ team_standing.points_against }}</td>
+                                <td class="text-center fw-bolder {% if team_standing.point_difference >= 0 %}text-success{% else %}text-danger{% endif %} border-light d-none d-sm-table-cell">
+                                    {{ team_standing.point_difference }}
+                                </td>
+                                <td class="text-center text-muted small border-light d-none d-lg-table-cell">{{ team_standing.tries_for }}</td>
+                                <td class="text-center text-muted small border-light d-none d-lg-table-cell">{{ team_standing.tries_against }}</td>
+                                <td class="text-center text-muted border-light d-none d-md-table-cell">{{ team_standing.bonus_points }}</td>
+
+                                <td class="text-center px-4 fw-bolder text-primary border-light fs-6">{{ team_standing.total_points }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-light border shadow-sm rounded-4 text-center py-4">
+            <i class="fas fa-info-circle text-muted me-2"></i>No standings available for the {{ current_season.year }} season.
+        </div>
+    {% endif %}
+
+    <div class="my-5">
+        {% include "widgets/match_center.html" %}
+    </div>
+
+    <h2 class="fw-bolder text-uppercase hover-text text-center mb-5">Teams in {{ league.name }} ({{ current_season.year }})</h2>
+    {% if teams_in_league %}
+        <div class="row align-center justify-content-center">
+            {% for team in teams_in_league %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 text-center card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4 hover-card">
+                        {% if team.crest %}
+                            <img src="{{ team.crest.url }}" class="card-img-top mx-auto mt-3" alt="{{ team.name }} Crest" style="max-height: 100px; width: auto;">
+                        {% else %}
+                            <img src="{% static 'crest-placeholder.png' %}" class="card-img-top mx-auto mt-3" alt="Default Crest" style="max-height: 100px; width: auto;">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="fw-bolder mb-1 text-truncate">{{ team.name }}</h5>
+                            <p class="fw-bolder mb-1 text-truncate">{{ team.gender }} - {{ team.age_group }}</p>
+                            <div class="mt-auto">
+                                <a href="{% url 'team_details' team.id %}" class="btn btn-sm btn-outline-primary">View Team Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-muted">No teams found for the {{ current_season.year }} season.</p>
+    {% endif %}
+</div>
+{% endblock %}

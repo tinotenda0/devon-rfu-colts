@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Home - Colts{% endblock %}
+{% block content %}
+
+<div class="p-5 bg-image"
+     style="
+     background-image: url('/static/hero1.png');
+     background-size: cover;
+     background-position: center;
+     height: 650px;"
+     id="hero">
+  <div class="text-left mb-5" style="color: white; width: 180px; margin-left: 50px;">
+    <h1 class="display-4 fw-bolder">THE HEART OF UGBY IN DEVON </h1>
+      <a href="/about"><button type="button" class="btn btn-primary btn-lg">ABOUT US</button></a>
+  </div>
+</div>
+    
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="text-center font-weight-bold">RECENT MATCHES</h3>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <span class="badge badge-secondary">🥈</span> Team 03 - 14 Team
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="col-md-6">
+      <h3 class="text-center font-weight-bold">FIXTURE</h3>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <span class="badge badge-secondary">🥈</span> Team vs Team
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+    <div class="spacer"></div>
+
+<div class="container" id="sponsors-section">
+  <h2 class="mb-4 text-center">Our Sponsors</h2>
+  <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
+    <img src="/static/sponsor1.png" alt="Sponsor 1" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+    <img src="/static/sponsor2.png" alt="Sponsor 2" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+    <img src="/static/sponsor3.png" alt="Sponsor 3" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+    <img src="/static/sponsor4.png" alt="Sponsor 4" height="80"
+     onerror="this.onerror=null; this.src='/static/default_sponsor.png';">
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="container" id="about-section">
+  <h2 class="mb-4 text-center">About Devon RFU Colts</h2>
+  <p class="text-center">Devon RFU Colts is dedicated to nurturing young rugby talent in the Devon area. Our mission is to provide a supportive environment where players can develop their skills, sportsmanship, and love for the game. We are committed to fostering a strong community spirit and promoting the values of rugby both on and off the field.</p>
+</div>
+{% endblock %}

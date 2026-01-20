@@ -1,0 +1,71 @@
+{% extends 'accounts/forms_base.html' %}
+{% block title %}Add New Result{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Add New Result</h2>
+    <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.match.id_for_label }}">
+                Match
+            </label>
+            {{ form.match }}
+            {% if form.match.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.match.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.home_score.id_for_label }}">
+                Home Score
+            </label>
+            {{ form.home_score }}
+            {% if form.home_score.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.home_score.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.away_score.id_for_label }}">
+                Away Score
+            </label>
+            {{ form.away_score }}
+            {% if form.away_score.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.away_score.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.home_tries.id_for_label }}">
+                Home Tries
+            </label>
+            {{ form.home_tries }}
+            {% if form.home_tries.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.home_tries.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.away_tries.id_for_label }}">
+                Away Tries
+            </label>
+            {{ form.away_tries }}
+            {% if form.away_tries.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.away_tries.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ form.notes.id_for_label }}">
+                Notes
+            </label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+                <p class="text-red-500 text-xs italic">{{ form.notes.errors }}</p>
+            {% endif %}
+        </div>
+        <div class="flex items-center justify-between">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Add Result
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

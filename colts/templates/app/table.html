@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Standings - Colts{% endblock %}
+{% block hero %}table{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Standings for {{ league.name }}</h1>
+    {% if standings %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th>P</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>PF</th>
+                        <th>PA</th>
+                        <th>PD</th>
+                        <th>TF</th>
+                        <th>TA</th>
+                        <th>BP</th>
+                        <th>Pts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for team_standing in standings %}
+                        <tr>
+                            <td>{{ team_standing.team.name }}</td>
+                            <td>{{ team_standing.played }}</td>
+                            <td>{{ team_standing.wins }}</td>
+                            <td>{{ team_standing.draws }}</td>
+                            <td>{{ team_standing.losses }}</td>
+                            <td>{{ team_standing.points_for }}</td>
+                            <td>{{ team_standing.points_against }}</td>
+                            <td>{{ team_standing.point_difference }}</td>
+                            <td>{{ team_standing.tries_for }}</td>
+                            <td>{{ team_standing.tries_against }}</td>
+                            <td>{{ team_standing.bonus_points }}</td>
+                            <td>{{ team_standing.total_points }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No standings available for this league yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

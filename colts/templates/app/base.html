@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Devon RFU Colts website" />
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
+  <title>{% block title %}Devon RFU Colts{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"
+    defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://kit.fontawesome.com/c584cb283d.js" crossorigin="anonymous"></script>
+
+  <style>
+    h1 h2 h3 h4 h5 h6 {
+      font-family: "Poppins", sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <nav class="py-1" style="background: #a5db2a">
+    <div class="container-fluid d-flex justify-content-between align-items-center small">
+      <div>
+        <span class="me-3">colts@devonrfu.co.uk</span>
+        <span class="me-3">| +441234567890</span>
+      </div>
+      <div>
+        <a href="#" style="color: black"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" style="color: black"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" style="color: black"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="header">
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <img src="/static/logo.svg" alt="Devon RFU logo" height="48" class="me-3" />
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#clubNavbar"
+        aria-controls="clubNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="clubNavbar">
+        <ul class="navbar-nav mb-2 mb-lg-0 gap-4">
+          <li class="nav-item">
+            <a class="nav-link fw-bolder text-white" href="/about">ABOUT US</a>
+          </li>
+        <li class="nav-item">
+            <a class="nav-link fw-bolder text-white" href="/matches">MATCHES</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link fw-bolder text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              LEAGUES
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for league in all_leagues %}
+                <li><a class="dropdown-item" href="{% url 'league_details' league.id %}">{{ league.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link fw-bolder text-white dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              SEASONS
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/seasons/archive">ARCHIVE</a></li>
+              {% for season in all_seasons %}
+                <li><a class="dropdown-item" href="{% url 'season_details' season.id %}">{{ season.year }}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-bolder text-white" href="/contact">CONTACT</a>
+          </li>
+            {% if user.is_authenticated %}
+              {% if user.is_superuser or user.role == "admin" %}
+                  <li class="nav-item">
+                <a class="nav-link fw-bolder text-white" href="{% url 'index' %}">ADMIN</a>
+                  </li>
+                  <li class="nav-item">
+              <a class="nav-link fw-bolder text-white" href="{% url 'logout' %}">LOGOUT</a>
+                  </li>
+              {% elif user.role == "club_admin" %}
+                  <li class="nav-item">
+                <a class="nav-link fw-bolder text-white" href="{% url 'club_admin_dash' %}">MY CLUB</a>
+                  </li>
+                  <li class="nav-item">
+              <a class="nav-link fw-bolder text-white" href="{% url 'logout' %}">LOGOUT</a>
+                  </li>
+              {% endif %}
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  
+  <header class="hero">
+    <div class="container">
+        <h1 class="hero-title text-white">{% block hero %} {% endblock %}</h1>
+    </div>
+  </header>
+  </div>
+
+
+  <div class="flex-container">{% block content %} {% endblock %}</div>
+
+  {% include "widgets/sponsors.html" %}
+
+<footer class="bg-dark text-white pt-5 pb-3" id="footer">
+  <div class="container">
+    <div class="row text-center text-md-start">
+
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h6 class="text-uppercase fw-bold text-success mb-3">Contact Us</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <i class="fas fa-envelope me-2 text-white-50"></i>
+            <a href="mailto:colts@devonrfu.co.uk" class="text-white text-decoration-none link-success">colts@devonrfu.co.uk</a>
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-phone me-2 text-white-50"></i>
+            <span class="text-white-50">+44 1234 567 890</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-4 mb-4 mb-md-0 text-center">
+        <h6 class="text-uppercase fw-bold text-success mb-3">Follow Us</h6>
+        <div class="d-flex justify-content-center gap-3">
+          <a href="#" class="text-white fs-2 transition-hover"><i class="fa-brands fa-square-facebook"></i></a>
+          <a href="#" class="text-white fs-2 transition-hover"><i class="fa-brands fa-square-instagram"></i></a>
+          <a href="#" class="text-white fs-2 transition-hover"><i class="fa-brands fa-square-x-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="col-md-4 text-center text-md-end">
+        <h6 class="text-uppercase fw-bold text-success mb-3">Our Sponsors</h6>
+        <div class="bg-white p-2 rounded d-inline-block">
+            <a href="https://www.ashburtonmotorworks.co.uk/">
+            <img src="/static/sponsor1.png" alt="Sponsor 1" height="40" class="mx-1" />
+                </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4 border-secondary">
+
+    <div class="row align-items-center">
+      <div class="col-md-12 text-center text-white-50 small">
+        <p class="mb-0">&copy; {% now "Y" %} Devon RFU Colts. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>
