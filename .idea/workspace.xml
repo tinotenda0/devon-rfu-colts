@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="88a7c37c-6b26-4069-a3cf-ebb1bfb5a56f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/templates/powerwiki/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/colts/templates/powerwiki/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +137,7 @@
       <workItem from="1764003593909" duration="47000" />
       <workItem from="1764003648197" duration="115000" />
       <workItem from="1768822006033" duration="3628000" />
-      <workItem from="1768986000470" duration="1771000" />
+      <workItem from="1768986000470" duration="3060000" />
     </task>
     <servers />
   </component>
