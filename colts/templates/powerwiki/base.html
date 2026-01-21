@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Devon RFU Colts – Docs{% endblock %}
+
+{# Optional: override hero text just for docs #}
+{% block hero %}
+  Documentation
+{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-12 col-lg-9">
+        <div class="bg-white p-4 rounded shadow-sm">
+          {# This is where powerwiki will render the page body #}
+          {{ block.super }}
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-3 mt-4 mt-lg-0">
+        <div class="bg-white p-3 rounded shadow-sm">
+          <h5 class="fw-bold mb-3">Docs navigation</h5>
+          {# If powerwiki exposes a TOC / nav block, you can slot it here later #}
+          <p class="small text-muted mb-0">
+            Use the links in the page body to navigate documentation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
