@@ -8,7 +8,7 @@ from .views import (register, logout_view, index, add_new, club_admin_dash,
                     player_details, match_details, season_details, archive,
                     manage_seasons, edit_season, delete_season, delete_user,
                     edit_user, archive_season, edit_match, delete_match,
-                    edit_result, leagues, join_league, my_leagues)
+                    edit_result, leagues, join_league, my_leagues, doc_view, docs_base)
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
@@ -52,5 +52,7 @@ urlpatterns = [
     path("edit_result/<int:result_id>/", edit_result, name="edit_result"),
     path("delete_match/<int:match_id>/", delete_match, name="delete_match"),
     path("season_details/<int:season_id>/", season_details, name="season_details"),
-    path("archive/", archive, name="archive")
+    path("archive/", archive, name="archive"),
+    path("docs/", docs_base, name="docs_index"),
+    path("docs/<slug:slug>/", doc_view, name="docs_page"),
 ]
