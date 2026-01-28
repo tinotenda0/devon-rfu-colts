@@ -1,3 +1,4 @@
+markdown
 dj-config-url
 python-dotenv
 Django~=5.2.8

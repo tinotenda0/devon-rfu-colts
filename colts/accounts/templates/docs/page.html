@@ -15,9 +15,49 @@
       <div class="col-12 col-lg-3 mt-4 mt-lg-0">
         <div class="bg-white p-3 rounded shadow-sm">
           <h5 class="fw-bold mb-3">DOCS NAVIGATION</h5>
+
+          <h6 class="text-muted text-uppercase small mt-3 mb-2">Getting Started</h6>
           <ul class="list-unstyled small mb-0">
-            <li><a href="{% url 'docs_index' %}">Home</a></li>
+            <li><a href="{% url 'docs_index' %}">Documentation Home</a></li>
+            <li><a href="{% url 'docs_page' 'login' %}">Login & Authentication</a></li>
+          </ul>
+
+          <h6 class="text-muted text-uppercase small mt-3 mb-2">Dashboards</h6>
+          <ul class="list-unstyled small mb-0">
+            <li><a href="{% url 'docs_page' 'home-dash' %}">Home Dashboard</a></li>
+            <li><a href="{% url 'docs_page' 'club-admin-dash' %}">Club Admin Dashboard</a></li>
+          </ul>
+
+          <h6 class="text-muted text-uppercase small mt-3 mb-2">Management</h6>
+          <ul class="list-unstyled small mb-0">
+            <li><a href="{% url 'docs_page' 'manage-seasons' %}">Manage Seasons</a></li>
+            <li><a href="{% url 'docs_page' 'manage-leagues' %}">Manage Leagues</a></li>
+            <li><a href="{% url 'docs_page' 'manage-teams' %}">Manage Teams</a></li>
+            <li><a href="{% url 'docs_page' 'manage-players' %}">Manage Players</a></li>
+          </ul>
+
+          <h6 class="text-muted text-uppercase small mt-3 mb-2">Creating Records</h6>
+          <ul class="list-unstyled small mb-0">
+            <li><a href="{% url 'docs_page' 'add-season' %}">Add New Season</a></li>
+            <li><a href="{% url 'docs_page' 'add-league' %}">Add New League</a></li>
+            <li><a href="{% url 'docs_page' 'add-team' %}">Add New Team</a></li>
+            <li><a href="{% url 'docs_page' 'add-player' %}">Add New Player</a></li>
+          </ul>
+
+          <h6 class="text-muted text-uppercase small mt-3 mb-2">Match Management</h6>
+          <ul class="list-unstyled small mb-0">
+            <li><a href="{% url 'docs_page' 'add-fixture' %}">Add New Fixture</a></li>
+            <li><a href="{% url 'docs_page' 'add-result' %}">Add New Result</a></li>
             <li><a href="{% url 'docs_page' 'submitting-results' %}">Submitting Results</a></li>
+          </ul>
+
+          <h6 class="text-muted text-uppercase small mt-3 mb-2">User Administration</h6>
+          <ul class="list-unstyled small mb-0">
+            <li><a href="{% url 'docs_page' 'add-admin' %}">Add Club Admin</a></li>
+          </ul>
+
+          <h6 class="text-muted text-uppercase small mt-3 mb-2">Reference</h6>
+          <ul class="list-unstyled small mb-0">
             <li><a href="{% url 'docs_page' 'fixture-csv-format' %}">Fixture CSV Format</a></li>
             <li><a href="{% url 'docs_page' 'league-rules' %}">League Rules &amp; Tie-breakers</a></li>
           </ul>

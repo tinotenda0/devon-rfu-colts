@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
+
+
 DATABASE_URL = os.getenv("SUPABASE_DB_URL")
 
 SECRET_KEY = "django-insecure-e486vsdsvl-)!do+n3!^2&o4irw6#ymb^#_46_^ucoydp#rl()"
