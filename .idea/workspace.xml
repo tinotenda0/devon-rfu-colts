@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88a7c37c-6b26-4069-a3cf-ebb1bfb5a56f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/colts/accounts/docs.py" beforeDir="false" afterPath="$PROJECT_DIR$/colts/accounts/docs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/accounts/templates/docs/index.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/accounts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/colts/accounts/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/colts/accounts/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/colts/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/colts/colts/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/media/docs/01_Login_guide.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/media/docs/02_Home_dashboard.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/colts/media/docs/03_Club_admin_dashboard.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/colts/app/static/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/colts/app/static/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +145,7 @@
       <workItem from="1769418419890" duration="25000" />
       <workItem from="1769418462984" duration="5842000" />
       <workItem from="1769438094583" duration="57000" />
-      <workItem from="1769596019926" duration="4425000" />
+      <workItem from="1769596019926" duration="4773000" />
     </task>
     <servers />
   </component>
