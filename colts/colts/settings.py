@@ -11,6 +11,10 @@ load_dotenv(BASE_DIR / ".env")
 
 DATABASE_URL = os.getenv("SUPABASE_DB_URL")
 
+DATABASES = {
+    'default': dj_database_url.config(env='SUPABASE_DB_URL', conn_max_age=600)
+}
+
 SECRET_KEY = "django-insecure-e486vsdsvl-)!do+n3!^2&o4irw6#ymb^#_46_^ucoydp#rl()"
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
