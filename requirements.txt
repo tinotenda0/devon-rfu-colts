@@ -8,3 +8,4 @@ gunicorn
 whitenoise
 django-powerwiki
 beautifulsoup4
+dj-database-url
